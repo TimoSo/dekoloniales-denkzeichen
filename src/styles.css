@@ -32,13 +32,13 @@ body {
   color: white;
   background: rgb(0, 0, 0);
   background: radial-gradient(circle at bottom center, rgb(255, 255, 255) 0%, rgb(189, 184, 172) 58%);
-  cursor: url('baobab_up32.png') 16 0, auto;
+  cursor: url('./baobab_up32.png') 16 0, auto;
   font-family: inter;
 }
 
 .annotation:hover {
   /* Wenn du ein eigenes Bild willst: */
-  cursor: url('/baobab_up_hover32.png') 16 0, pointer;
+  cursor: url('./baobab_up_hover32.png') 16 0, pointer;
 
   /* Oder ein Standard-CSS-Cursor: */
   /* cursor: help; */
@@ -93,7 +93,7 @@ canvas {
 
 .header {
   pointer-events: auto;
-  cursor: url('/baobab_up_hover32.png') 32 0, pointer;
+  cursor: url('./baobab_up_hover32.png') 32 0, pointer;
   position: absolute;
   top: 4em;
   left: 0;
@@ -227,7 +227,7 @@ canvas {
   left: 1.5em;
   width: 32px;
   height: 32px;
-  cursor: baobab_up_hover32;
+  cursor: url('./baobab_up_hover32.png') 32 0, auto;
   z-index: 100;
   pointer-events: auto;
 }
