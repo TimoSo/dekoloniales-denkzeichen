@@ -154,10 +154,10 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
     let targetScale = 2.5
 
     if (page === 'archiv') {
-      targetPos = [-4, -4, 3]
+      targetPos = [-4, -3, 3]
       targetScale = 4.5
     } else if (page === 'artists') {
-      targetPos = [5, 1, 3]
+      targetPos = [5.35, 3.75, 3]
       targetScale = 4.5
     }
 

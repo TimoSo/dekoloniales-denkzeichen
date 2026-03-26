@@ -122,7 +122,6 @@ function MainApp() {
       </div>
 
       {page === 'home' && <InfoBox />}
-
       {page === 'archiv' && <ArchivePage />}
       {page === 'artists' && <ArtistsPage />}
       {page === 'dekolonialePraxis' && <DekolonialePraxisPage />}

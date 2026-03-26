@@ -95,12 +95,12 @@ canvas {
   pointer-events: auto;
   cursor: url('./baobab_up_hover32.png') 32 0, pointer;
   position: absolute;
-  top: 4em;
+  top: 2em;
   left: 0;
   color: rgb(46, 46, 46);
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 900;
-  font-size: 0.9em;
+  font-size: 0.82em;
   width: 100%;
   text-align: center;
 }
@@ -130,7 +130,7 @@ canvas {
   }
   .nav-wrapper span {
     margin: 0 0.4em !important;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
   }
 }
 
