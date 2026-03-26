@@ -30,7 +30,7 @@ function DekolonialePraxisPage() {
   )
 }
 
-function Header({ setPage }) {
+function Header({ setPage, page }) {
   const [style, setStyle] = useState({ opacity: 0, left: 0 })
 
   const handleMouseEnter = (e) => {
@@ -43,21 +43,26 @@ function Header({ setPage }) {
     setStyle((prev) => ({ ...prev, opacity: 0 }))
   }
 
+  const navItems = [
+    { label: 'DENKZEICHEN', id: 'home' },
+    { label: 'DEKOLONIALE PRAXIS', id: 'dekolonialePraxis' },
+    { label: 'ARCHIV', id: 'archiv' },
+    { label: 'ARTISTS', id: 'artists' },
+  ]
+
   return (
     <div className="header">
       <div className="nav-wrapper" onMouseLeave={handleMouseLeave}>
-        <span style={{ margin: '0 2em', cursor: 'baobab_up_hover32' }} onMouseEnter={handleMouseEnter} onClick={() => setPage('home')}>
-          DENKZEICHEN
-        </span>
-        <span style={{ margin: '0 2em', cursor: 'baobab_up_hover32' }} onMouseEnter={handleMouseEnter} onClick={() => setPage('dekolonialePraxis')}>
-          DEKOLONIALE PRAXIS
-        </span>
-        <span style={{ margin: '0 2em', cursor: 'baobab_up_hover32' }} onMouseEnter={handleMouseEnter} onClick={() => setPage('archiv')}>
-          ARCHIV
-        </span>
-        <span style={{ margin: '0 2em', cursor: 'baobab_up_hover32' }} onMouseEnter={handleMouseEnter} onClick={() => setPage('artists')}>
-          ARTISTS
-        </span>
+        {navItems.map((item) => (
+          <span
+            key={item.id}
+            className={`nav-item ${page === item.id ? 'nav-active' : ''} ${page !== 'home' && page === item.id ? 'nav-active-colored' : ''}`}
+            style={{ margin: '0 2em' }}
+            onMouseEnter={handleMouseEnter}
+            onClick={() => setPage(item.id)}>
+            {item.label}
+          </span>
+        ))}
         <div className="sliding-line" style={style} />
       </div>
     </div>
@@ -97,19 +102,22 @@ function MainApp() {
 
   return (
     <>
-      <Header setPage={handleSetPage} />
+      <Header setPage={handleSetPage} page={page} />
 
       <Suspense fallback={null}>
         <App page={page} />
       </Suspense>
 
       <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'}`}>
-        <h1>
+        <h1 className="desktop-title">
           DEKOLONIALES
           <br />
           DENKZEICHEN
           <br />
           DORTMUND
+        </h1>
+        <h1 className="mobile-title">
+          DEKO<br />LONI<br />ALES<br />DENK<br />ZEIC<br />HEN
         </h1>
       </div>
 
