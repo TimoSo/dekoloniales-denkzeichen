@@ -86,6 +86,11 @@ canvas {
   color: rgb(0, 0, 0);
 }
 
+/* Annotations sanft einfaden */
+.annotation-fadein {
+  animation: fade-in 1.5s ease forwards;
+}
+
 .loader {
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 900;
@@ -111,10 +116,47 @@ canvas {
   position: relative;
 }
 
+/* Dynamischer Abstand auf kleineren Bildschirmen */
+@media (max-width: 900px) {
+  .header {
+    top: 2em;
+    font-size: 0.75em;
+  }
+  .nav-wrapper span {
+    margin: 0 0.8em !important;
+    letter-spacing: 0.2em;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    top: 1.5em;
+    font-size: 0.6em;
+  }
+  .nav-wrapper span {
+    margin: 0 0.4em !important;
+    letter-spacing: 0.1em;
+  }
+}
+
 .nav-wrapper {
   position: relative;
   display: inline-block;
   pointer-events: auto; /* Wichtig für die Maus-Erkennung! */
+}
+
+/* Nav-Item Hover: subtil weiterer Zeichenabstand */
+.nav-item {
+  transition: letter-spacing 0.3s ease, color 0.3s ease;
+}
+
+.nav-item:hover {
+  letter-spacing: 0.55em;
+}
+
+/* Aktive Seite (nicht Home): gedecktes Orange */
+.nav-active-colored {
+  color: rgb(180, 108, 40);
 }
 
 .sliding-line {
@@ -181,22 +223,27 @@ canvas {
 }
 
 .main-background-title h1 {
-  /* Nutzt die bereits importierte Schriftart 'Josefin Sans' */
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 900;
-
-  /* Macht den Text sehr groß und responsiv zur Bildschirmbreite (vw = viewport width) */
   font-size: 12vw;
-
-  /* Verringert den Zeilenabstand, damit die Worte näher beieinander stehen */
   line-height: 0.85em;
-
-  /* Farbe: Ein halbtransparentes Weiß, damit das 3D-Modell im Vordergrund gut sichtbar bleibt */
   color: rgb(0, 105, 76);
-
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: -0.05em; /* Optional: Für einen kompakteren Look */
+  letter-spacing: -0.05em;
+}
+
+/* Mobile: Silben-Umbruch für Hintergrundtext */
+.main-background-title .mobile-title { display: none; }
+.main-background-title .desktop-title { display: block; }
+
+@media (max-width: 600px) {
+  .main-background-title .desktop-title { display: none; }
+  .main-background-title .mobile-title { display: block; }
+  .main-background-title h1 {
+    font-size: 22vw;
+    line-height: 0.9em;
+  }
 }
 
 .page-content {

@@ -1,6 +1,6 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Canvas, extend, useFrame } from '@react-three/fiber'
-import { useGLTF, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
+import { useGLTF, useAnimations, SoftShadows, Html, CameraControls } from '@react-three/drei'
 import { easing, geometry } from 'maath'
 
 extend(geometry)
@@ -21,16 +21,28 @@ export default function App({ page }) {
     }
   }
 
-  const handleReset = (transition = true) => {
+  const handleReset = useCallback((transition = true) => {
     if (controlsRef.current) {
       controlsRef.current.setLookAt(0, 1.5, 14, 0, 0, 0, transition)
       setIsZoomedIn(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     handleReset(false)
-  }, [page])
+  }, [page, handleReset])
+
+  // Rechtsklick: Kamera zurück zur Ursprungsposition
+  useEffect(() => {
+    const handleContextMenu = (e) => {
+      if (page === 'home') {
+        e.preventDefault()
+        handleReset(true)
+      }
+    }
+    window.addEventListener('contextmenu', handleContextMenu)
+    return () => window.removeEventListener('contextmenu', handleContextMenu)
+  }, [page, handleReset])
 
   return (
     <Canvas
@@ -49,8 +61,8 @@ export default function App({ page }) {
       <Model page={page} handleZoomTo={handleZoomTo} isZoomedIn={isZoomedIn} position={[0, -5.5, 3]} rotation={[0, -0.2, 0]} />
 
       <SoftShadows samples={4} />
-      <ambientLight intensity={1} />
-      <Environment preset="city" />
+      <ambientLight intensity={0.6} />
+      {/* Environment preset entfernt — verursachte den hellen Schimmer/Verwässerung */}
 
       <CameraControls
         ref={controlsRef}
@@ -69,21 +81,63 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   const light = useRef()
   const spinRef = useRef()
   const modelRef = useRef()
+  const [showAnnotations, setShowAnnotations] = useState(false)
 
   const markerKiste = useRef()
   const markerKrone = useRef()
   const markerSpiegel = useRef()
 
-  const { scene } = useGLTF('/Baobab_Website_e11.glb')
+  const { scene, animations } = useGLTF('/Baobab_Website_e11.glb')
+  const { actions } = useAnimations(animations, modelRef)
+  const [introComplete, setIntroComplete] = useState(false)
+
+  // Intro-Animation abspielen wenn vorhanden im GLB
+  useEffect(() => {
+    const actionNames = Object.keys(actions)
+    if (actionNames.length > 0 && page === 'home') {
+      const introAction = actions[actionNames[0]]
+      introAction.reset()
+      introAction.clampWhenFinished = true
+      introAction.loop = 2200 // THREE.LoopOnce
+      introAction.play()
+
+      // Nach Ende der Animation: Intro fertig
+      const onFinished = () => setIntroComplete(true)
+      introAction.getMixer().addEventListener('finished', onFinished)
+      return () => introAction.getMixer().removeEventListener('finished', onFinished)
+    } else {
+      // Kein Animation vorhanden — sofort starten
+      setIntroComplete(true)
+    }
+  }, [actions, page])
+
+  // Annotations nach 2 Sekunden einfaden (nach Intro)
+  useEffect(() => {
+    if (!introComplete) return
+    const timer = setTimeout(() => setShowAnnotations(true), 2000)
+    return () => clearTimeout(timer)
+  }, [introComplete])
 
   useEffect(() => {
     scene.traverse((child) => {
-      if (child.isMesh && child.material.transparent) {
-        child.material.depthWrite = false // Wichtigste Zeile
-        child.material.polygonOffset = true
-        child.material.polygonOffsetFactor = -1
+      if (child.isMesh) {
+        // Transparente Materialien (Baumkrone mit transmission)
+        if (child.material.transparent) {
+          child.material.depthWrite = false
+          child.material.polygonOffset = true
+          child.material.polygonOffsetFactor = -1
+        }
+
+        // Transmission-Materialien: Flimmern reduzieren
+        if (child.material.transmission && child.material.transmission > 0) {
+          child.material.roughness = Math.max(child.material.roughness, 0.5)
+          child.material.ior = 1.0 // Brechungsindex auf 1 = kein Refraction-Flimmern
+          child.material.thickness = 0.1 // Minimale Dicke reduziert Artefakte
+          child.material.specularIntensity = 0.2 // Reduziert spekulative Reflexionen
+          child.material.envMapIntensity = 0.3 // Reduziert Environment-Reflexionen
+        }
+
         child.material.needsUpdate = true
-        child.material.roughness = Math.max(child.material.roughness, 0.3)
       }
     })
   }, [scene])
@@ -112,7 +166,7 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
     }
     easing.damp3(spinRef.current.position, targetPos, 0.8, delta)
 
-    if (spinRef.current && !isZoomedIn) {
+    if (spinRef.current && !isZoomedIn && introComplete) {
       spinRef.current.rotation.y += delta * 0.3
     }
   })
@@ -138,18 +192,22 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
           <meshBasicMaterial />
         </mesh>
 
-        {/* Annotations ohne occlude – kein Konflikt mit den Markern */}
-        <Annotation position={[1.75, 3, 2]} onClick={() => page === 'home' && handleZoomTo(markerKiste)}>
-          Kiste
-        </Annotation>
+        {/* Annotations mit 2s Fade-in nach Laden */}
+        {showAnnotations && (
+          <>
+            <Annotation position={[1.75, 3, 2]} onClick={() => page === 'home' && handleZoomTo(markerKiste)}>
+              Kiste
+            </Annotation>
 
-        <Annotation position={[3.2, 8.8, 0]} onClick={() => page === 'home' && handleZoomTo(markerKrone)}>
-          Krone
-        </Annotation>
+            <Annotation position={[3.2, 8.8, 0]} onClick={() => page === 'home' && handleZoomTo(markerKrone)}>
+              Krone
+            </Annotation>
 
-        <Annotation position={[-0.9, 5.8, 1]} onClick={() => page === 'home' && handleZoomTo(markerSpiegel)}>
-          Spiegel
-        </Annotation>
+            <Annotation position={[-0.9, 5.8, 1]} onClick={() => page === 'home' && handleZoomTo(markerSpiegel)}>
+              Spiegel
+            </Annotation>
+          </>
+        )}
       </group>
 
       <spotLight angle={0.5} penumbra={0.5} ref={light} castShadow intensity={2} shadow-mapSize={1024} shadow-bias={-0.001}>
@@ -163,7 +221,7 @@ function Annotation({ children, onClick, ...props }) {
   return (
     <Html {...props} transform sprite center>
       <div
-        className="annotation"
+        className="annotation annotation-fadein"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={(e) => {
           e.stopPropagation()
