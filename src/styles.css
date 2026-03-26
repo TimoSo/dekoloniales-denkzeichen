@@ -1,0 +1,268 @@
+@import url('https://rsms.me/inter/inter.css');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+#root {
+  overflow: auto;
+}
+
+body {
+  position: fixed;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  font-family: 'Amiri', serif;
+  color: white;
+  background: rgb(0, 0, 0);
+  background: radial-gradient(circle at bottom center, rgb(255, 255, 255) 0%, rgb(189, 184, 172) 58%);
+  cursor: url('baobab_up32.png') 16 0, auto;
+  font-family: inter;
+}
+
+.annotation:hover {
+  /* Wenn du ein eigenes Bild willst: */
+  cursor: url('/baobab_up_hover32.png') 16 0, pointer;
+
+  /* Oder ein Standard-CSS-Cursor: */
+  /* cursor: help; */
+
+  box-shadow: inset 250px 0 0 0 white;
+  color: black;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+canvas {
+  opacity: 0;
+  touch-action: none;
+  animation: fade-in 2s ease 0s forwards;
+}
+
+.annotation {
+  transition: all 0.5s ease-in-out;
+  box-shadow: inset 0 0 0 0.1px white;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  font-size: 8px;
+  font-weight: 300;
+  background: rgba(0, 0, 0, 0.34);
+  color: white;
+  padding: 3px 6px;
+  border-radius: 8px;
+  letter-spacing: 0.2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0px;
+}
+
+.annotation:hover {
+  box-shadow: inset 250px 0 0 0 white;
+  color: rgb(0, 0, 0);
+}
+
+.loader {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 900;
+}
+
+.header {
+  pointer-events: auto;
+  cursor: url('/baobab_up_hover32.png') 32 0, pointer;
+  position: absolute;
+  top: 4em;
+  left: 0;
+  color: rgb(46, 46, 46);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 900;
+  font-size: 0.9em;
+  width: 100%;
+  text-align: center;
+}
+
+.header > span {
+  padding: 0 3.25em;
+  letter-spacing: 0.4em;
+  position: relative;
+}
+
+.nav-wrapper {
+  position: relative;
+  display: inline-block;
+  pointer-events: auto; /* Wichtig für die Maus-Erkennung! */
+}
+
+.sliding-line {
+  position: absolute;
+  bottom: -6px;
+  width: 40px;
+  height: 4px;
+  background: rgb(0, 105, 76);
+  transition: left 0.6s ease, opacity 1.5s ease;
+  pointer-events: none;
+}
+
+.middle {
+  pointer-events: none;
+  position: absolute;
+  bottom: 2.5em;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  font-size: 2em;
+  letter-spacing: 0.5em;
+  text-align: center;
+  width: 100%;
+}
+
+.middle > h1 {
+  line-height: 0.9em;
+  font-weight: 150;
+}
+
+.middle > h1::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 2px;
+  background: rgb(255, 255, 255);
+}
+
+.middle > h2 {
+  font-size: 1em;
+  line-height: 0px;
+  font-weight: 100;
+  letter-spacing: 0.25em;
+  font-style: italic;
+}
+
+.main-background-title {
+  /* Ermöglicht es dem User, durch den Text hindurch mit dem 3D-Modell zu interagieren */
+  pointer-events: none;
+
+  /* Absolute Positionierung im Zentrum */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Z-Index: Legt das Element nach HINTEN */
+  /* Da der Canvas standardmäßig vorn ist (oder durch Animationen nach vorn kommt), zwingen wir den Text nach hinten. */
+  z-index: -1;
+
+  text-align: center;
+  width: 100%;
+}
+
+.main-background-title h1 {
+  /* Nutzt die bereits importierte Schriftart 'Josefin Sans' */
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 900;
+
+  /* Macht den Text sehr groß und responsiv zur Bildschirmbreite (vw = viewport width) */
+  font-size: 12vw;
+
+  /* Verringert den Zeilenabstand, damit die Worte näher beieinander stehen */
+  line-height: 0.85em;
+
+  /* Farbe: Ein halbtransparentes Weiß, damit das 3D-Modell im Vordergrund gut sichtbar bleibt */
+  color: rgb(0, 105, 76);
+
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.05em; /* Optional: Für einen kompakteren Look */
+}
+
+.page-content {
+  position: absolute;
+  top: 150px;
+  left: 10%;
+  width: 80%;
+  color: white;
+  z-index: 10;
+}
+
+.main-background-title {
+  transition: opacity 2s ease;
+}
+
+.title-visible {
+  opacity: 1;
+}
+
+.title-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.info-button {
+  position: fixed;
+  bottom: 1.5em;
+  left: 1.5em;
+  width: 32px;
+  height: 32px;
+  cursor: baobab_up_hover32;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.info-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 20vw;
+  min-width: 220px;
+  background-color: rgb(22, 22, 21);
+  color: #cecece;
+  padding: 3.33em;
+  z-index: 99;
+  border-top-right-radius: 4px;
+
+  /* Ausgangszustand: weggeklappt nach unten links */
+  transform: scale(0);
+  transform-origin: bottom left;
+  opacity: 0;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.info-box-open {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.info-box p {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.85em;
+  font-weight: 300;
+  line-height: 2em;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
