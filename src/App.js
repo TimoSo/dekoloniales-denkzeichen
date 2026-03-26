@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import * as THREE from 'three' // WICHTIG: THREE importieren
 import { Canvas, extend, useFrame } from '@react-three/fiber'
 import { useGLTF, useAnimations, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
@@ -51,7 +52,6 @@ export default function App({ page }) {
       eventPrefix="client"
       camera={{ position: [0, 1.5, 14], fov: 45 }}
       onPointerMissed={() => {
-        // Nur zurücksetzen wenn wirklich herangezoomt ist
         if (isZoomedIn) handleReset(true)
       }}>
       <fog attach="fog" args={['black', 0, 25]} />
@@ -87,31 +87,41 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   const markerKrone = useRef()
   const markerSpiegel = useRef()
 
-  const { scene, animations } = useGLTF('/Baobab_Website_e11.glb')
-  const { actions } = useAnimations(animations, modelRef)
+  const { scene, animations } = useGLTF('/Baobab_Website_e12.glb')
+
+  // FIX 1: Direkt 'scene' übergeben und den 'mixer' extrahieren
+  const { actions, mixer } = useAnimations(animations, scene)
   const [introComplete, setIntroComplete] = useState(false)
 
-  // Intro-Animation abspielen wenn vorhanden im GLB
+  // Intro-Animation abspielen
+  // Intro-Animation abspielen
   useEffect(() => {
     const actionNames = Object.keys(actions)
     if (actionNames.length > 0 && page === 'home') {
       const introAction = actions[actionNames[0]]
+
       introAction.reset()
       introAction.clampWhenFinished = true
-      introAction.loop = 2200 // THREE.LoopOnce
-      introAction.play()
+      introAction.setLoop(THREE.LoopOnce, 1)
 
-      // Nach Ende der Animation: Intro fertig
+      // Verzögerung von 1 Sekunde (1000ms), bevor die Animation startet
+      const startTimer = setTimeout(() => {
+        introAction.play()
+      }, 100)
+
       const onFinished = () => setIntroComplete(true)
-      introAction.getMixer().addEventListener('finished', onFinished)
-      return () => introAction.getMixer().removeEventListener('finished', onFinished)
+      mixer.addEventListener('finished', onFinished)
+
+      return () => {
+        clearTimeout(startTimer) // Timer beim Verlassen aufräumen
+        mixer.removeEventListener('finished', onFinished)
+      }
     } else {
-      // Kein Animation vorhanden — sofort starten
       setIntroComplete(true)
     }
-  }, [actions, page])
+  }, [actions, mixer, page])
 
-  // Annotations nach 2 Sekunden einfaden (nach Intro)
+  // Annotations nach 2 Sekunden einfaden
   useEffect(() => {
     if (!introComplete) return
     const timer = setTimeout(() => setShowAnnotations(true), 2000)
@@ -121,20 +131,18 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   useEffect(() => {
     scene.traverse((child) => {
       if (child.isMesh) {
-        // Transparente Materialien (Baumkrone mit transmission)
         if (child.material.transparent) {
           child.material.depthWrite = false
           child.material.polygonOffset = true
           child.material.polygonOffsetFactor = -1
         }
 
-        // Transmission-Materialien: Flimmern reduzieren
         if (child.material.transmission && child.material.transmission > 0) {
           child.material.roughness = Math.max(child.material.roughness, 0.5)
-          child.material.ior = 1 // Brechungsindex auf 1 = kein Refraction-Flimmern
-          child.material.thickness = 0.1 // Minimale Dicke reduziert Artefakte
-          child.material.specularIntensity = 0.6 // Reduziert spekulative Reflexionen
-          child.material.envMapIntensity = 0.9 // Reduziert Environment-Reflexionen
+          child.material.ior = 1
+          child.material.thickness = 0.1
+          child.material.specularIntensity = 0.6
+          child.material.envMapIntensity = 0.9
         }
 
         child.material.needsUpdate = true
@@ -176,7 +184,6 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
       <group ref={spinRef}>
         <primitive ref={modelRef} object={scene} position={[0, 0, 0]} />
 
-        {/* Sichtbare Marker-Boxen für fitToBox – aber winzig und transparent */}
         <mesh ref={markerKiste} position={[1.75, 3, 2]} visible={false}>
           <boxGeometry args={[1, 1, 1]} />
           <meshBasicMaterial />
@@ -192,7 +199,6 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
           <meshBasicMaterial />
         </mesh>
 
-        {/* Annotations mit 2s Fade-in nach Laden */}
         {showAnnotations && (
           <>
             <Annotation position={[1.75, 3, 2]} onClick={() => page === 'home' && handleZoomTo(markerKiste)}>
