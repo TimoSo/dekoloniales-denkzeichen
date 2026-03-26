@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Canvas, extend, useFrame } from '@react-three/fiber'
-import { useGLTF, useAnimations, SoftShadows, Html, CameraControls } from '@react-three/drei'
+import { useGLTF, useAnimations, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
 
 extend(geometry)
@@ -62,7 +62,7 @@ export default function App({ page }) {
 
       <SoftShadows samples={4} />
       <ambientLight intensity={0.6} />
-      {/* Environment preset entfernt — verursachte den hellen Schimmer/Verwässerung */}
+      <Environment preset="city" />
 
       <CameraControls
         ref={controlsRef}
@@ -131,10 +131,10 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
         // Transmission-Materialien: Flimmern reduzieren
         if (child.material.transmission && child.material.transmission > 0) {
           child.material.roughness = Math.max(child.material.roughness, 0.5)
-          child.material.ior = 1.0 // Brechungsindex auf 1 = kein Refraction-Flimmern
+          child.material.ior = 1 // Brechungsindex auf 1 = kein Refraction-Flimmern
           child.material.thickness = 0.1 // Minimale Dicke reduziert Artefakte
-          child.material.specularIntensity = 0.2 // Reduziert spekulative Reflexionen
-          child.material.envMapIntensity = 0.3 // Reduziert Environment-Reflexionen
+          child.material.specularIntensity = 0.6 // Reduziert spekulative Reflexionen
+          child.material.envMapIntensity = 0.9 // Reduziert Environment-Reflexionen
         }
 
         child.material.needsUpdate = true

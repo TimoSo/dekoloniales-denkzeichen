@@ -37,12 +37,7 @@ body {
 }
 
 .annotation:hover {
-  /* Wenn du ein eigenes Bild willst: */
   cursor: url('./baobab_up_hover32.png') 16 0, pointer;
-
-  /* Oder ein Standard-CSS-Cursor: */
-  /* cursor: help; */
-
   box-shadow: inset 250px 0 0 0 white;
   color: black;
 }
@@ -151,12 +146,12 @@ canvas {
 }
 
 .nav-item:hover {
-  letter-spacing: 0.55em;
+  letter-spacing: 0.15em;
 }
 
 /* Aktive Seite (nicht Home): gedecktes Orange */
 .nav-active-colored {
-  color: rgb(180, 108, 40);
+  color: rgb(100, 100, 100);
 }
 
 .sliding-line {
@@ -234,12 +229,20 @@ canvas {
 }
 
 /* Mobile: Silben-Umbruch für Hintergrundtext */
-.main-background-title .mobile-title { display: none; }
-.main-background-title .desktop-title { display: block; }
+.main-background-title .mobile-title {
+  display: none;
+}
+.main-background-title .desktop-title {
+  display: block;
+}
 
 @media (max-width: 600px) {
-  .main-background-title .desktop-title { display: none; }
-  .main-background-title .mobile-title { display: block; }
+  .main-background-title .desktop-title {
+    display: none;
+  }
+  .main-background-title .mobile-title {
+    display: block;
+  }
   .main-background-title h1 {
     font-size: 22vw;
     line-height: 0.9em;
