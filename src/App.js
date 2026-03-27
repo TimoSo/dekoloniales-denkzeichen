@@ -1,8 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, extend, useFrame } from '@react-three/fiber'
 import { useGLTF, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
-import * as THREE from 'three'
 
 extend(geometry)
 
@@ -78,9 +77,12 @@ export default function App({ page }) {
 
 // Annotation-Daten mit Zusatzinfos
 const annotationData = [
-  { name: 'Kiste', position: [1.75, 3, 2], info: 'Die Kiste symbolisiert den kolonialen Handel und die Ausbeutung von Ressourcen.' },
+  { name: 'Handelswege', position: [1.75, 2.5, 2], info: 'Die Handelswege symbolisieren den kolonialen Handel und die Ausbeutung von Ressourcen.' },
   { name: 'Krone', position: [3.2, 8.8, 0], info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.' },
-  { name: 'Spiegel', position: [-0.9, 5.8, 1], info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.' },
+  { name: 'Baobab', position: [-0.9, 5.8, 1], info: 'Der Baobab ist ein Symbol für Stärke und kulturelles Gedächtnis.' },
+  { name: 'Hafen', position: [-1.75, 2.5, -2], info: 'Der Hafen verweist auf den transatlantischen Handel und seine Folgen.' },
+  { name: 'Lichter', position: [-2.5, 8.3, 0], info: 'Die Lichter stehen für Erinnerung und Hoffnung.' },
+  { name: 'Spiegel', position: [1, 4, -1], info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.' },
 ]
 
 function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
@@ -90,13 +92,13 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   const modelRef = useRef()
   const [showAnnotations, setShowAnnotations] = useState(false)
 
-  const markerRefs = useRef([useRef(), useRef(), useRef()])
+  const markerRefs = useRef(annotationData.map(() => ({ current: null })))
 
   const { scene } = useGLTF('/Baobab_Website_e12.glb')
 
-  // Annotations nach 2 Sekunden einfaden
+  // Annotations nach kurzem Delay einfaden
   useEffect(() => {
-    const timer = setTimeout(() => setShowAnnotations(true), 2000)
+    const timer = setTimeout(() => setShowAnnotations(true), 200)
     return () => clearTimeout(timer)
   }, [])
 
@@ -109,10 +111,9 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
           child.material.polygonOffsetFactor = -1
         }
 
-        // Transmission-Materialien: IOR auf 1 = kein Refraction-Flimmern
         if (child.material.transmission && child.material.transmission > 0) {
           child.material.roughness = Math.max(child.material.roughness, 0.5)
-          child.material.ior = 1.0
+          child.material.ior = 1
           child.material.thickness = 0.1
           child.material.specularIntensity = 0.6
           child.material.envMapIntensity = 0.9
@@ -134,11 +135,11 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
     let targetPos = [0, 0, 0]
     let targetScale = 2.5
 
-    if (page === 'archiv') {
+    if (page === 'dekolonialePraxis') {
       targetPos = [-4, -3, 3]
       targetScale = 4.5
-    } else if (page === 'artists') {
-      targetPos = [5.35, 3.75, 3]
+    } else if (page === 'kontext') {
+      targetPos = [0, -15, -2]
       targetScale = 4.5
     }
 
@@ -159,7 +160,11 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
 
         {/* Marker-Boxen für fitToBox */}
         {annotationData.map((ann, i) => (
-          <mesh key={ann.name + '-marker'} ref={el => { if (markerRefs.current[i]) markerRefs.current[i].current = el }} position={ann.position} visible={false}>
+          <mesh
+            key={ann.name + '-marker'}
+            ref={(el) => { markerRefs.current[i].current = el }}
+            position={ann.position}
+            visible={false}>
             <boxGeometry args={[1, 1, 1]} />
             <meshBasicMaterial />
           </mesh>

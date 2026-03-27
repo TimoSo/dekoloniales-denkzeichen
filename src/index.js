@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import React, { Suspense, useState, useRef, useEffect } from 'react'
+import React, { Suspense, useState } from 'react'
 import './styles.css'
 import App from './App'
 import { StraightGallery } from './StraightGallery'
@@ -8,15 +8,6 @@ function KontextPage() {
   return (
     <div className="page-content kontext-page">
       <StraightGallery />
-    </div>
-  )
-}
-
-function ArchivePage() {
-  return (
-    <div className="page-content">
-      <h2>Das Archiv</h2>
-      <p>Hier stehen die Inhalte für das Archiv.</p>
     </div>
   )
 }
@@ -62,7 +53,6 @@ function Header({ setPage, page }) {
   )
 }
 
-// Fullscreen-Overlay das sich von der Button-Position ausbreitet
 function KontextOverlay({ active }) {
   return <div className={`kontext-overlay ${active ? 'kontext-overlay-active' : ''}`} />
 }
@@ -91,7 +81,6 @@ function MainApp() {
 
   const handleSetPage = (newPage) => {
     if (newPage === 'kontext') {
-      // Overlay-Animation starten, dann Seite wechseln
       setOverlayActive(true)
       setTimeout(() => {
         setTitleVisible(false)
@@ -126,13 +115,22 @@ function MainApp() {
           DORTMUND
         </h1>
         <h1 className="mobile-title">
-          DEKO<br />LONI<br />ALES<br />DENK<br />ZEIC<br />HEN
+          DEKO
+          <br />
+          LONI
+          <br />
+          ALES
+          <br />
+          DENK
+          <br />
+          ZEIC
+          <br />
+          HEN
         </h1>
       </div>
 
       {page === 'home' && <InfoBox />}
       {page === 'kontext' && <KontextPage />}
-      {page === 'archiv' && <ArchivePage />}
       {page === 'artists' && <ArtistsPage />}
       {page === 'dekolonialePraxis' && <DekolonialePraxisPage />}
     </>
