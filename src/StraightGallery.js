@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 
 // Bilddaten mit dazugehörigem Text
 const galleryData = [
-  { id: 660, alt: 'sparkler', src: 'https://picsum.photos/id/660/1200/1200', text: 'Ein funkelnder Moment in der Dunkelheit.' },
+  { id: 660, alt: 'Aufbau', src: '/project/workspace/public/Baobab_Aufbau_1.jpg', text: 'Ein funkelnder Moment in der Dunkelheit.' },
   { id: 669, alt: 'hat', src: 'https://picsum.photos/id/669/1200/1200', text: 'Ein alter Hut mit vielen Geschichten.' },
   { id: 823, alt: 'camera', src: 'https://picsum.photos/id/823/1200/1200', text: 'Den richtigen Winkel finden.' },
   { id: 64, alt: 'flowers', src: 'https://picsum.photos/id/64/1200/1200', text: 'Die Schönheit der Natur in Blüte.' },
@@ -58,9 +58,7 @@ export function StraightGallery() {
       </div>
 
       {/* Text unter der Galerie (Desktop) / über dem Bild (Mobile via CSS) */}
-      <div className={`straight-gallery-text ${isHovered || tappedIndex !== null ? 'visible' : ''}`}>
-        {activeText || 'Hover ein Bild für mehr Infos'}
-      </div>
+      <div className={`straight-gallery-text ${isHovered || tappedIndex !== null ? 'visible' : ''}`}>{activeText || 'Hover ein Bild für mehr Infos'}</div>
     </div>
   )
 }

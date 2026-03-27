@@ -94,7 +94,7 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
 
   const markerRefs = useRef(annotationData.map(() => ({ current: null })))
 
-  const { scene } = useGLTF('/Baobab_Website_e12.glb')
+  const { scene } = useGLTF('/Baobab_Website_e11.glb')
 
   // Annotations nach kurzem Delay einfaden
   useEffect(() => {
@@ -162,7 +162,9 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
         {annotationData.map((ann, i) => (
           <mesh
             key={ann.name + '-marker'}
-            ref={(el) => { markerRefs.current[i].current = el }}
+            ref={(el) => {
+              markerRefs.current[i].current = el
+            }}
             position={ann.position}
             visible={false}>
             <boxGeometry args={[1, 1, 1]} />
@@ -171,15 +173,16 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
         ))}
 
         {/* Annotations mit Occlusion und Info-Textfeld */}
-        {showAnnotations && annotationData.map((ann, i) => (
-          <Annotation
-            key={ann.name}
-            position={ann.position}
-            name={ann.name}
-            info={ann.info}
-            onClick={() => page === 'home' && handleZoomTo(markerRefs.current[i])}
-          />
-        ))}
+        {showAnnotations &&
+          annotationData.map((ann, i) => (
+            <Annotation
+              key={ann.name}
+              position={ann.position}
+              name={ann.name}
+              info={ann.info}
+              onClick={() => page === 'home' && handleZoomTo(markerRefs.current[i])}
+            />
+          ))}
       </group>
 
       <spotLight angle={0.5} penumbra={0.5} ref={light} castShadow intensity={2} shadow-mapSize={1024} shadow-bias={-0.001}>
@@ -201,17 +204,10 @@ function Annotation({ name, info, onClick, ...props }) {
   return (
     <Html {...props} transform sprite center occlude="blending" style={{ transition: 'opacity 0.3s' }}>
       <div className="annotation-container">
-        <div
-          className="annotation annotation-fadein"
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={handleClick}>
+        <div className="annotation annotation-fadein" onPointerDown={(e) => e.stopPropagation()} onClick={handleClick}>
           {name}
         </div>
-        {expanded && (
-          <div className="annotation-info annotation-fadein">
-            {info}
-          </div>
-        )}
+        {expanded && <div className="annotation-info annotation-fadein">{info}</div>}
       </div>
     </Html>
   )
