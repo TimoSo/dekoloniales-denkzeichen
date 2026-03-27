@@ -1,5 +1,13 @@
 @import url('https://rsms.me/inter/inter.css');
 
+/* Thumpa-Font für den Hintergrundtext */
+@font-face {
+  font-family: 'Thumpa';
+  src: url('./Thumpa.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -28,33 +36,33 @@ body {
   position: fixed;
   overflow: hidden;
   overscroll-behavior-y: none;
-  font-family: 'Amiri', serif;
+  font-family: inter, sans-serif;
   color: white;
   background: rgb(0, 0, 0);
   background: radial-gradient(circle at bottom center, rgb(255, 255, 255) 0%, rgb(189, 184, 172) 58%);
   cursor: url('./baobab_up32.png') 16 0, auto;
-  font-family: inter;
-}
-
-.annotation:hover {
-  cursor: url('./baobab_up_hover32.png') 16 0, pointer;
-  box-shadow: inset 250px 0 0 0 white;
-  color: black;
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 canvas {
   opacity: 0;
   touch-action: none;
   animation: fade-in 2s ease 0s forwards;
+}
+
+/* ===================== */
+/* ANNOTATIONS           */
+/* ===================== */
+
+.annotation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .annotation {
@@ -73,152 +81,113 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0px;
 }
 
 .annotation:hover {
+  cursor: url('./baobab_up_hover32.png') 16 0, pointer;
   box-shadow: inset 250px 0 0 0 white;
   color: rgb(0, 0, 0);
 }
 
-/* Annotations sanft einfaden */
 .annotation-fadein {
   animation: fade-in 1.5s ease forwards;
 }
 
-.loader {
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 900;
+/* Info-Text unter der Annotation */
+.annotation-info {
+  font-size: 7px;
+  font-weight: 300;
+  color: white;
+  text-align: center;
+  max-width: 140px;
+  line-height: 1.4;
+  padding: 4px 6px;
+  letter-spacing: 0.1px;
 }
+
+/* ===================== */
+/* HEADER                */
+/* ===================== */
 
 .header {
   pointer-events: auto;
-  cursor: url('./baobab_up_hover32.png') 32 0, pointer;
   position: absolute;
   top: 2em;
   left: 0;
-  color: rgb(46, 46, 46);
+  width: 100%;
+  text-align: center;
+  z-index: 50;
+}
+
+.header-button {
+  display: inline-block;
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 900;
   font-size: 0.82em;
+  letter-spacing: 0.3em;
+  padding: 0.5em 1.5em;
+  border-radius: 6px;
+  cursor: url('./baobab_up_hover32.png') 32 0, pointer;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.header-button-brown {
+  background-color: rgb(90, 60, 30);
+  color: rgb(220, 210, 195);
+}
+
+.header-button-brown:hover {
+  background-color: rgb(110, 75, 40);
+}
+
+.header-button-default {
+  background-color: rgb(189, 184, 172);
+  color: rgb(46, 46, 46);
+}
+
+.header-button-default:hover {
+  background-color: rgb(200, 195, 183);
+}
+
+/* ===================== */
+/* KONTEXT OVERLAY       */
+/* ===================== */
+
+.kontext-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  text-align: center;
-}
-
-.header > span {
-  padding: 0 3.25em;
-  letter-spacing: 0.4em;
-  position: relative;
-}
-
-/* Dynamischer Abstand auf kleineren Bildschirmen */
-@media (max-width: 900px) {
-  .header {
-    top: 2em;
-    font-size: 0.75em;
-  }
-  .nav-wrapper span {
-    margin: 0 0.8em !important;
-    letter-spacing: 0.2em;
-  }
-}
-
-@media (max-width: 500px) {
-  .header {
-    top: 1.5em;
-    font-size: 0.6em;
-  }
-  .nav-wrapper span {
-    margin: 0 0.4em !important;
-    letter-spacing: 0.05em;
-  }
-}
-
-.nav-wrapper {
-  position: relative;
-  display: inline-block;
-  pointer-events: auto; /* Wichtig für die Maus-Erkennung! */
-}
-
-/* Nav-Item Hover: subtil weiterer Zeichenabstand */
-.nav-item {
-  transition: letter-spacing 0.3s ease, color 0.3s ease;
-}
-
-.nav-item:hover {
-  letter-spacing: 0.15em;
-}
-
-/* Aktive Seite (nicht Home): gedecktes Orange */
-.nav-active-colored {
-  color: rgb(100, 100, 100);
-}
-
-.sliding-line {
-  position: absolute;
-  bottom: -6px;
-  width: 40px;
-  height: 4px;
-  background: rgb(0, 105, 76);
-  transition: left 0.6s ease, opacity 1.5s ease;
+  height: 100%;
+  background-color: rgb(90, 60, 30);
+  z-index: 5;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-.middle {
-  pointer-events: none;
-  position: absolute;
-  bottom: 2.5em;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  font-size: 2em;
-  letter-spacing: 0.5em;
-  text-align: center;
-  width: 100%;
+.kontext-overlay-active {
+  opacity: 0.85;
 }
 
-.middle > h1 {
-  line-height: 0.9em;
-  font-weight: 150;
-}
-
-.middle > h1::after {
-  content: '';
-  position: absolute;
-  bottom: 10px;
-  left: calc(50% - 25px);
-  width: 50px;
-  height: 2px;
-  background: rgb(255, 255, 255);
-}
-
-.middle > h2 {
-  font-size: 1em;
-  line-height: 0px;
-  font-weight: 100;
-  letter-spacing: 0.25em;
-  font-style: italic;
-}
+/* ===================== */
+/* HINTERGRUND-TITEL     */
+/* ===================== */
 
 .main-background-title {
-  /* Ermöglicht es dem User, durch den Text hindurch mit dem 3D-Modell zu interagieren */
   pointer-events: none;
-
-  /* Absolute Positionierung im Zentrum */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  /* Z-Index: Legt das Element nach HINTEN */
-  /* Da der Canvas standardmäßig vorn ist (oder durch Animationen nach vorn kommt), zwingen wir den Text nach hinten. */
   z-index: -1;
-
   text-align: center;
   width: 100%;
+  transition: opacity 2s ease;
 }
 
 .main-background-title h1 {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: 'Thumpa', sans-serif;
   font-weight: 900;
   font-size: 12vw;
   line-height: 0.85em;
@@ -226,40 +195,15 @@ canvas {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: -0.05em;
+  transition: all 0.4s ease;
+  -webkit-text-stroke: 0px transparent;
 }
 
-/* Mobile: Silben-Umbruch für Hintergrundtext */
-.main-background-title .mobile-title {
-  display: none;
-}
-.main-background-title .desktop-title {
-  display: block;
-}
-
-@media (max-width: 600px) {
-  .main-background-title .desktop-title {
-    display: none;
-  }
-  .main-background-title .mobile-title {
-    display: block;
-  }
-  .main-background-title h1 {
-    font-size: 22vw;
-    line-height: 0.9em;
-  }
-}
-
-.page-content {
-  position: absolute;
-  top: 150px;
-  left: 10%;
-  width: 80%;
-  color: white;
-  z-index: 10;
-}
-
-.main-background-title {
-  transition: opacity 2s ease;
+/* Hover: Outline-Version des Texts */
+.main-background-title h1:hover {
+  pointer-events: auto;
+  color: transparent;
+  -webkit-text-stroke: 2px rgb(0, 105, 76);
 }
 
 .title-visible {
@@ -270,6 +214,44 @@ canvas {
   opacity: 0;
   pointer-events: none;
 }
+
+/* Mobile: Silben-Umbruch */
+.main-background-title .mobile-title { display: none; }
+.main-background-title .desktop-title { display: block; pointer-events: auto; }
+
+@media (max-width: 600px) {
+  .main-background-title .desktop-title { display: none; }
+  .main-background-title .mobile-title { display: block; pointer-events: auto; }
+  .main-background-title h1 {
+    font-size: 22vw;
+    line-height: 0.9em;
+  }
+}
+
+/* ===================== */
+/* PAGE CONTENT          */
+/* ===================== */
+
+.page-content {
+  position: absolute;
+  top: 80px;
+  left: 10%;
+  width: 80%;
+  color: white;
+  z-index: 10;
+}
+
+.kontext-page {
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+/* ===================== */
+/* INFO BOX              */
+/* ===================== */
 
 .info-button {
   position: fixed;
@@ -288,13 +270,13 @@ canvas {
   left: 0;
   width: 20vw;
   min-width: 220px;
+  max-height: 20vh;
+  overflow-y: auto;
   background-color: rgb(22, 22, 21);
   color: #cecece;
-  padding: 3.33em;
+  padding: 2.5em 2.5em 2.5em 3.5em;
   z-index: 99;
   border-top-right-radius: 4px;
-
-  /* Ausgangszustand: weggeklappt nach unten links */
   transform: scale(0);
   transform-origin: bottom left;
   opacity: 0;
@@ -315,4 +297,122 @@ canvas {
   line-height: 2em;
   letter-spacing: 0.05em;
   margin: 0;
+}
+
+/* ===================== */
+/* STRAIGHT GALLERY      */
+/* ===================== */
+
+.straight-gallery-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 2em 0;
+  gap: 2em;
+}
+
+/* Desktop: oberes Drittel Bilder, untere 2/3 Text */
+.straight-gallery-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  flex-wrap: wrap;
+  max-width: 90vw;
+}
+
+.straight-gallery-item {
+  width: 12vw;
+  min-width: 120px;
+  aspect-ratio: 4/6;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, filter 0.1s ease;
+  filter: grayscale(100%);
+  cursor: pointer;
+}
+
+.straight-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.straight-gallery-item:hover {
+  filter: grayscale(0%);
+  transform: translateY(-10px) rotate(0deg) scale(1.05) !important;
+  z-index: 10;
+}
+
+/* Mobile: tapped state statt hover */
+.straight-gallery-item.tapped {
+  filter: grayscale(0%);
+  transform: translateY(-10px) rotate(0deg) scale(1.05) !important;
+  z-index: 10;
+}
+
+.straight-gallery-text {
+  font-family: 'Amiri', serif;
+  font-size: 1.2rem;
+  color: white;
+  text-align: center;
+  max-width: 600px;
+  min-height: 2em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  padding: 0 2em;
+}
+
+.straight-gallery-text.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile Gallery: vertikal, 80% Breite */
+@media (max-width: 768px) {
+  .straight-gallery-wrapper {
+    padding-top: 3em;
+  }
+
+  .straight-gallery-row {
+    flex-direction: column;
+    gap: 1em;
+    max-width: 80vw;
+  }
+
+  .straight-gallery-item {
+    width: 80vw;
+    min-width: unset;
+    aspect-ratio: 16/9;
+  }
+
+  .straight-gallery-item:hover {
+    transform: none !important;
+    filter: grayscale(100%);
+  }
+
+  .straight-gallery-item.tapped {
+    filter: grayscale(0%);
+    transform: scale(1.02) rotate(0deg) !important;
+  }
+
+  .straight-gallery-text {
+    font-size: 1rem;
+    padding: 0 1em;
+  }
+}
+
+/* ===================== */
+/* LOADER                */
+/* ===================== */
+
+.loader {
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 900;
 }

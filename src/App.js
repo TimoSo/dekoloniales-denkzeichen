@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import * as THREE from 'three' // WICHTIG: THREE importieren
-import { Canvas, extend, useFrame } from '@react-three/fiber'
-import { useGLTF, useAnimations, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { useGLTF, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
+import * as THREE from 'three'
 
 extend(geometry)
 
@@ -76,6 +76,13 @@ export default function App({ page }) {
   )
 }
 
+// Annotation-Daten mit Zusatzinfos
+const annotationData = [
+  { name: 'Kiste', position: [1.75, 3, 2], info: 'Die Kiste symbolisiert den kolonialen Handel und die Ausbeutung von Ressourcen.' },
+  { name: 'Krone', position: [3.2, 8.8, 0], info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.' },
+  { name: 'Spiegel', position: [-0.9, 5.8, 1], info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.' },
+]
+
 function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   const group = useRef()
   const light = useRef()
@@ -83,50 +90,15 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   const modelRef = useRef()
   const [showAnnotations, setShowAnnotations] = useState(false)
 
-  const markerKiste = useRef()
-  const markerKrone = useRef()
-  const markerSpiegel = useRef()
+  const markerRefs = useRef([useRef(), useRef(), useRef()])
 
-  const { scene, animations } = useGLTF('/Baobab_Website_e12.glb')
-
-  // FIX 1: Direkt 'scene' übergeben und den 'mixer' extrahieren
-  const { actions, mixer } = useAnimations(animations, scene)
-  const [introComplete, setIntroComplete] = useState(false)
-
-  // Intro-Animation abspielen
-  // Intro-Animation abspielen
-  useEffect(() => {
-    const actionNames = Object.keys(actions)
-    if (actionNames.length > 0 && page === 'home') {
-      const introAction = actions[actionNames[0]]
-
-      introAction.reset()
-      introAction.clampWhenFinished = true
-      introAction.setLoop(THREE.LoopOnce, 1)
-
-      // Verzögerung von 1 Sekunde (1000ms), bevor die Animation startet
-      const startTimer = setTimeout(() => {
-        introAction.play()
-      }, 100)
-
-      const onFinished = () => setIntroComplete(true)
-      mixer.addEventListener('finished', onFinished)
-
-      return () => {
-        clearTimeout(startTimer) // Timer beim Verlassen aufräumen
-        mixer.removeEventListener('finished', onFinished)
-      }
-    } else {
-      setIntroComplete(true)
-    }
-  }, [actions, mixer, page])
+  const { scene } = useGLTF('/Baobab_Website_e12.glb')
 
   // Annotations nach 2 Sekunden einfaden
   useEffect(() => {
-    if (!introComplete) return
     const timer = setTimeout(() => setShowAnnotations(true), 2000)
     return () => clearTimeout(timer)
-  }, [introComplete])
+  }, [])
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -137,9 +109,10 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
           child.material.polygonOffsetFactor = -1
         }
 
+        // Transmission-Materialien: IOR auf 1 = kein Refraction-Flimmern
         if (child.material.transmission && child.material.transmission > 0) {
           child.material.roughness = Math.max(child.material.roughness, 0.5)
-          child.material.ior = 1
+          child.material.ior = 1.0
           child.material.thickness = 0.1
           child.material.specularIntensity = 0.6
           child.material.envMapIntensity = 0.9
@@ -174,7 +147,7 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
     }
     easing.damp3(spinRef.current.position, targetPos, 0.8, delta)
 
-    if (spinRef.current && !isZoomedIn && introComplete) {
+    if (spinRef.current && !isZoomedIn) {
       spinRef.current.rotation.y += delta * 0.3
     }
   })
@@ -184,36 +157,24 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
       <group ref={spinRef}>
         <primitive ref={modelRef} object={scene} position={[0, 0, 0]} />
 
-        <mesh ref={markerKiste} position={[1.75, 3, 2]} visible={false}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial />
-        </mesh>
+        {/* Marker-Boxen für fitToBox */}
+        {annotationData.map((ann, i) => (
+          <mesh key={ann.name + '-marker'} ref={el => { if (markerRefs.current[i]) markerRefs.current[i].current = el }} position={ann.position} visible={false}>
+            <boxGeometry args={[1, 1, 1]} />
+            <meshBasicMaterial />
+          </mesh>
+        ))}
 
-        <mesh ref={markerKrone} position={[3.2, 8.8, 0]} visible={false}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial />
-        </mesh>
-
-        <mesh ref={markerSpiegel} position={[-0.9, 5.8, 1]} visible={false}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshBasicMaterial />
-        </mesh>
-
-        {showAnnotations && (
-          <>
-            <Annotation position={[1.75, 3, 2]} onClick={() => page === 'home' && handleZoomTo(markerKiste)}>
-              Kiste
-            </Annotation>
-
-            <Annotation position={[3.2, 8.8, 0]} onClick={() => page === 'home' && handleZoomTo(markerKrone)}>
-              Krone
-            </Annotation>
-
-            <Annotation position={[-0.9, 5.8, 1]} onClick={() => page === 'home' && handleZoomTo(markerSpiegel)}>
-              Spiegel
-            </Annotation>
-          </>
-        )}
+        {/* Annotations mit Occlusion und Info-Textfeld */}
+        {showAnnotations && annotationData.map((ann, i) => (
+          <Annotation
+            key={ann.name}
+            position={ann.position}
+            name={ann.name}
+            info={ann.info}
+            onClick={() => page === 'home' && handleZoomTo(markerRefs.current[i])}
+          />
+        ))}
       </group>
 
       <spotLight angle={0.5} penumbra={0.5} ref={light} castShadow intensity={2} shadow-mapSize={1024} shadow-bias={-0.001}>
@@ -223,17 +184,29 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   )
 }
 
-function Annotation({ children, onClick, ...props }) {
+function Annotation({ name, info, onClick, ...props }) {
+  const [expanded, setExpanded] = useState(false)
+
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setExpanded(!expanded)
+    if (onClick) onClick()
+  }
+
   return (
-    <Html {...props} transform sprite center>
-      <div
-        className="annotation annotation-fadein"
-        onPointerDown={(e) => e.stopPropagation()}
-        onClick={(e) => {
-          e.stopPropagation()
-          onClick && onClick()
-        }}>
-        {children}
+    <Html {...props} transform sprite center occlude="blending" style={{ transition: 'opacity 0.3s' }}>
+      <div className="annotation-container">
+        <div
+          className="annotation annotation-fadein"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={handleClick}>
+          {name}
+        </div>
+        {expanded && (
+          <div className="annotation-info annotation-fadein">
+            {info}
+          </div>
+        )}
       </div>
     </Html>
   )

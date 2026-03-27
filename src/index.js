@@ -1,7 +1,16 @@
 import { createRoot } from 'react-dom/client'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useState, useRef, useEffect } from 'react'
 import './styles.css'
 import App from './App'
+import { StraightGallery } from './StraightGallery'
+
+function KontextPage() {
+  return (
+    <div className="page-content kontext-page">
+      <StraightGallery />
+    </div>
+  )
+}
 
 function ArchivePage() {
   return (
@@ -31,42 +40,31 @@ function DekolonialePraxisPage() {
 }
 
 function Header({ setPage, page }) {
-  const [style, setStyle] = useState({ opacity: 0, left: 0 })
+  const isHome = page === 'home'
+  const label = isHome ? 'KONTEXT' : 'DENKZEICHEN'
 
-  const handleMouseEnter = (e) => {
-    const span = e.target
-    const centerLeft = span.offsetLeft + span.offsetWidth / 2 - 20
-    setStyle({ opacity: 1, left: centerLeft })
+  const handleClick = () => {
+    if (isHome) {
+      setPage('kontext')
+    } else {
+      setPage('home')
+    }
   }
-
-  const handleMouseLeave = () => {
-    setStyle((prev) => ({ ...prev, opacity: 0 }))
-  }
-
-  const navItems = [
-    { label: 'DENKZEICHEN', id: 'home' },
-    { label: 'DEKOLONIALE PRAXIS', id: 'dekolonialePraxis' },
-    { label: 'ARCHIV', id: 'archiv' },
-    { label: 'ARTISTS', id: 'artists' },
-  ]
 
   return (
     <div className="header">
-      <div className="nav-wrapper" onMouseLeave={handleMouseLeave}>
-        {navItems.map((item) => (
-          <span
-            key={item.id}
-            className={`nav-item ${page === item.id ? 'nav-active' : ''} ${page !== 'home' && page === item.id ? 'nav-active-colored' : ''}`}
-            style={{ margin: '0 2em' }}
-            onMouseEnter={handleMouseEnter}
-            onClick={() => setPage(item.id)}>
-            {item.label}
-          </span>
-        ))}
-        <div className="sliding-line" style={style} />
+      <div
+        className={`header-button ${isHome ? 'header-button-brown' : 'header-button-default'}`}
+        onClick={handleClick}>
+        {label}
       </div>
     </div>
   )
+}
+
+// Fullscreen-Overlay das sich von der Button-Position ausbreitet
+function KontextOverlay({ active }) {
+  return <div className={`kontext-overlay ${active ? 'kontext-overlay-active' : ''}`} />
 }
 
 function InfoBox() {
@@ -89,12 +87,22 @@ function InfoBox() {
 function MainApp() {
   const [page, setPage] = useState('home')
   const [titleVisible, setTitleVisible] = useState(true)
+  const [overlayActive, setOverlayActive] = useState(false)
 
   const handleSetPage = (newPage) => {
-    if (newPage === 'home') {
+    if (newPage === 'kontext') {
+      // Overlay-Animation starten, dann Seite wechseln
+      setOverlayActive(true)
+      setTimeout(() => {
+        setTitleVisible(false)
+        setPage('kontext')
+      }, 600)
+    } else if (newPage === 'home') {
+      setOverlayActive(false)
       setPage('home')
       setTimeout(() => setTitleVisible(true), 50)
     } else {
+      setOverlayActive(false)
       setTitleVisible(false)
       setPage(newPage)
     }
@@ -103,6 +111,7 @@ function MainApp() {
   return (
     <>
       <Header setPage={handleSetPage} page={page} />
+      <KontextOverlay active={overlayActive} />
 
       <Suspense fallback={null}>
         <App page={page} />
@@ -122,6 +131,7 @@ function MainApp() {
       </div>
 
       {page === 'home' && <InfoBox />}
+      {page === 'kontext' && <KontextPage />}
       {page === 'archiv' && <ArchivePage />}
       {page === 'artists' && <ArtistsPage />}
       {page === 'dekolonialePraxis' && <DekolonialePraxisPage />}
