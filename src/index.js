@@ -33,6 +33,7 @@ function DekolonialePraxisPage() {
 function Header({ setPage, page }) {
   const isHome = page === 'home'
   const label = isHome ? 'KONTEXT' : 'DENKZEICHEN'
+  const [scribbleVisible, setScribbleVisible] = useState(false)
 
   const handleClick = () => {
     if (isHome) {
@@ -46,15 +47,32 @@ function Header({ setPage, page }) {
     <div className="header">
       <div
         className={`header-button ${isHome ? 'header-button-brown' : 'header-button-default'}`}
-        onClick={handleClick}>
+        onClick={handleClick}
+        onMouseEnter={() => setScribbleVisible(true)}
+        onMouseLeave={() => setScribbleVisible(false)}>
         {label}
+        {/* Scribble-Kreis beim Hover */}
+        <img
+          src="/baobab_hover_scribble_e01.png"
+          alt=""
+          className={`header-scribble ${scribbleVisible ? 'scribble-visible' : ''}`}
+        />
       </div>
     </div>
   )
 }
 
-function KontextOverlay({ active }) {
-  return <div className={`kontext-overlay ${active ? 'kontext-overlay-active' : ''}`} />
+function KontextOverlay({ active, originRect }) {
+  // Sphere-Wipe: radiale Ausbreitung vom Button
+  const style = {}
+  if (originRect) {
+    const cx = originRect.left + originRect.width / 2
+    const cy = originRect.top + originRect.height / 2
+    style['--wipe-cx'] = `${cx}px`
+    style['--wipe-cy'] = `${cy}px`
+  }
+
+  return <div className={`kontext-overlay ${active ? 'kontext-overlay-active' : ''}`} style={style} />
 }
 
 function InfoBox() {
@@ -78,9 +96,15 @@ function MainApp() {
   const [page, setPage] = useState('home')
   const [titleVisible, setTitleVisible] = useState(true)
   const [overlayActive, setOverlayActive] = useState(false)
+  const [buttonRect, setButtonRect] = useState(null)
+  // Titel wechselt zur Outline wenn über den Baum gehovert wird
+  const [treeHovered, setTreeHovered] = useState(false)
 
   const handleSetPage = (newPage) => {
     if (newPage === 'kontext') {
+      // Button-Position für Sphere-Wipe merken
+      const btn = document.querySelector('.header-button')
+      if (btn) setButtonRect(btn.getBoundingClientRect())
       setOverlayActive(true)
       setTimeout(() => {
         setTitleVisible(false)
@@ -100,13 +124,13 @@ function MainApp() {
   return (
     <>
       <Header setPage={handleSetPage} page={page} />
-      <KontextOverlay active={overlayActive} />
+      <KontextOverlay active={overlayActive} originRect={buttonRect} />
 
       <Suspense fallback={null}>
-        <App page={page} />
+        <App page={page} onTreeHover={setTreeHovered} />
       </Suspense>
 
-      <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'}`}>
+      <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'} ${treeHovered ? 'title-outline' : ''}`}>
         <h1 className="desktop-title">
           DEKOLONIALES
           <br />
