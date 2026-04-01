@@ -103,34 +103,28 @@ canvas {
   animation: fade-in 1.5s ease forwards;
 }
 
-/* Info-Text Overlay ÜBER dem Canvas */
+/* Info-Text Overlay: zentral im unteren Drittel, Blur-Hintergrund */
 .annotation-info-overlay {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
-  max-width: 280px;
-  padding: 1.2em 1.5em;
+  max-width: 450px;
+  width: 90%;
+  padding: 1.5em 2em;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.85em;
+  font-size: 0.9em;
   font-weight: 300;
   line-height: 1.8;
   letter-spacing: 0.03em;
   color: white;
-  border: 2px solid rgb(198, 83, 12);
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   pointer-events: none;
-}
-
-.info-align-left {
-  left: 5%;
-  text-align: left;
-}
-
-.info-align-right {
-  right: 5%;
-  text-align: right;
 }
 
 /* ===================== */
@@ -209,6 +203,15 @@ canvas {
   }
 }
 
+@keyframes sphere-wipe-reverse {
+  from {
+    clip-path: circle(150% at var(--wipe-cx, 50%) var(--wipe-cy, 2em));
+  }
+  to {
+    clip-path: circle(0% at var(--wipe-cx, 50%) var(--wipe-cy, 2em));
+  }
+}
+
 .kontext-overlay {
   position: fixed;
   top: 0;
@@ -225,6 +228,11 @@ canvas {
 .kontext-overlay-active {
   opacity: 1;
   animation: sphere-wipe 2s ease forwards;
+}
+
+.kontext-overlay-closing {
+  opacity: 1;
+  animation: sphere-wipe-reverse 2s ease forwards;
 }
 
 /* ===================== */

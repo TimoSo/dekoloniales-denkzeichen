@@ -9,9 +9,7 @@ extend(geometry)
 export default function App({ page, onTreeHover }) {
   const controlsRef = useRef()
   const [isZoomedIn, setIsZoomedIn] = useState(false)
-  // Shared State: welche Annotation ist gerade offen
   const [activeAnnotation, setActiveAnnotation] = useState(null)
-  // Info-Text Daten für Overlay über dem Canvas
   const [infoOverlay, setInfoOverlay] = useState(null)
 
   const handleZoomTo = (markerRef) => {
@@ -93,10 +91,9 @@ export default function App({ page, onTreeHover }) {
         />
       </Canvas>
 
-      {/* Info-Text Overlay ÜBER dem Canvas */}
+      {/* Info-Text Overlay zentral im unteren Drittel, mit Blur */}
       {infoOverlay && (
-        <div
-          className={`annotation-info-overlay annotation-fadein ${infoOverlay.side === 'left' ? 'info-align-left' : 'info-align-right'}`}>
+        <div className="annotation-info-overlay annotation-fadein">
           {infoOverlay.text}
         </div>
       )}
@@ -120,6 +117,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
   const spinRef = useRef()
   const modelRef = useRef()
   const [showAnnotations, setShowAnnotations] = useState(false)
+  // Sichtbarkeit pro Annotation (ob sie vor oder hinter dem Modell ist)
+  const [annotationVisibility, setAnnotationVisibility] = useState(annotationData.map(() => true))
 
   const markerRefs = useRef(annotationData.map(() => ({ current: null })))
 
@@ -180,20 +179,35 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
     if (spinRef.current && !isZoomedIn) {
       spinRef.current.rotation.y += delta * 0.3
     }
+
+    // Sichtbarkeit der Annotations berechnen: Ist die Annotation vor oder hinter dem Modellzentrum?
+    if (spinRef.current && showAnnotations) {
+      const camera = state.camera
+      const newVisibility = annotationData.map((ann) => {
+        // Annotation-Position in Weltkoordinaten umrechnen
+        const worldPos = new THREE.Vector3(...ann.position)
+        spinRef.current.localToWorld(worldPos)
+        // Modellzentrum in Weltkoordinaten
+        const modelCenter = new THREE.Vector3(0, 4, 0)
+        spinRef.current.localToWorld(modelCenter)
+        // Prüfen ob Annotation näher zur Kamera ist als das Modellzentrum
+        const annDist = camera.position.distanceTo(worldPos)
+        const centerDist = camera.position.distanceTo(modelCenter)
+        return annDist < centerDist + 2 // kleiner Puffer
+      })
+      setAnnotationVisibility(newVisibility)
+    }
   })
 
   // Annotation klick: andere schließen, Info-Overlay setzen
   const handleAnnotationClick = (index) => {
     const ann = annotationData[index]
     if (activeAnnotation === index) {
-      // Gleiche nochmal geklickt → schließen
       setActiveAnnotation(null)
       setInfoOverlay(null)
     } else {
       setActiveAnnotation(index)
-      // Seite bestimmen: x-Position > 0 = rechts, sonst links
-      const side = ann.position[0] > 0 ? 'right' : 'left'
-      setInfoOverlay({ text: ann.info, side })
+      setInfoOverlay({ text: ann.info })
     }
     if (page === 'home') handleZoomTo(markerRefs.current[index])
   }
@@ -223,7 +237,7 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
           </mesh>
         ))}
 
-        {/* Annotations mit Occlusion */}
+        {/* Annotations: Sichtbarkeit per Z-Check statt occlude */}
         {showAnnotations &&
           annotationData.map((ann, i) => (
             <Annotation
@@ -231,6 +245,7 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
               position={ann.position}
               name={ann.name}
               isActive={activeAnnotation === i}
+              isVisible={annotationVisibility[i]}
               onClick={() => handleAnnotationClick(i)}
             />
           ))}
@@ -243,14 +258,23 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
   )
 }
 
-function Annotation({ name, isActive, onClick, ...props }) {
+function Annotation({ name, isActive, isVisible, onClick, ...props }) {
   const handleClick = (e) => {
     e.stopPropagation()
     if (onClick) onClick()
   }
 
   return (
-    <Html {...props} transform sprite center occlude="blending" style={{ transition: 'opacity 0.3s' }}>
+    <Html
+      {...props}
+      transform
+      sprite
+      center
+      style={{
+        transition: 'opacity 0.3s',
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? 'auto' : 'none',
+      }}>
       <div className="annotation-container">
         <div
           className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`}

@@ -62,7 +62,7 @@ function Header({ setPage, page }) {
   )
 }
 
-function KontextOverlay({ active, originRect }) {
+function KontextOverlay({ active, closing, originRect }) {
   // Sphere-Wipe: radiale Ausbreitung vom Button
   const style = {}
   if (originRect) {
@@ -72,7 +72,11 @@ function KontextOverlay({ active, originRect }) {
     style['--wipe-cy'] = `${cy}px`
   }
 
-  return <div className={`kontext-overlay ${active ? 'kontext-overlay-active' : ''}`} style={style} />
+  let className = 'kontext-overlay'
+  if (active && !closing) className += ' kontext-overlay-active'
+  if (closing) className += ' kontext-overlay-closing'
+
+  return <div className={className} style={style} />
 }
 
 function InfoBox() {
@@ -96,6 +100,7 @@ function MainApp() {
   const [page, setPage] = useState('home')
   const [titleVisible, setTitleVisible] = useState(true)
   const [overlayActive, setOverlayActive] = useState(false)
+  const [overlayClosing, setOverlayClosing] = useState(false)
   const [buttonRect, setButtonRect] = useState(null)
   // Titel wechselt zur Outline wenn über den Baum gehovert wird
   const [treeHovered, setTreeHovered] = useState(false)
@@ -111,9 +116,16 @@ function MainApp() {
         setPage('kontext')
       }, 600)
     } else if (newPage === 'home') {
-      setOverlayActive(false)
+      // Sphere-Wipe rückwärts
+      const btn = document.querySelector('.header-button')
+      if (btn) setButtonRect(btn.getBoundingClientRect())
+      setOverlayClosing(true)
       setPage('home')
-      setTimeout(() => setTitleVisible(true), 50)
+      setTimeout(() => {
+        setOverlayActive(false)
+        setOverlayClosing(false)
+        setTitleVisible(true)
+      }, 2000)
     } else {
       setOverlayActive(false)
       setTitleVisible(false)
@@ -124,7 +136,7 @@ function MainApp() {
   return (
     <>
       <Header setPage={handleSetPage} page={page} />
-      <KontextOverlay active={overlayActive} originRect={buttonRect} />
+      <KontextOverlay active={overlayActive} closing={overlayClosing} originRect={buttonRect} />
 
       <Suspense fallback={null}>
         <App page={page} onTreeHover={setTreeHovered} />
