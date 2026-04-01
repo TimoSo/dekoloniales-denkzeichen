@@ -1,13 +1,18 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import { Canvas, extend, useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
+import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
 
 extend(geometry)
 
-export default function App({ page }) {
+export default function App({ page, onTreeHover }) {
   const controlsRef = useRef()
   const [isZoomedIn, setIsZoomedIn] = useState(false)
+  // Shared State: welche Annotation ist gerade offen
+  const [activeAnnotation, setActiveAnnotation] = useState(null)
+  // Info-Text Daten für Overlay über dem Canvas
+  const [infoOverlay, setInfoOverlay] = useState(null)
 
   const handleZoomTo = (markerRef) => {
     if (controlsRef.current && markerRef.current) {
@@ -25,6 +30,8 @@ export default function App({ page }) {
     if (controlsRef.current) {
       controlsRef.current.setLookAt(0, 1.5, 14, 0, 0, 0, transition)
       setIsZoomedIn(false)
+      setActiveAnnotation(null)
+      setInfoOverlay(null)
     }
   }, [])
 
@@ -45,33 +52,55 @@ export default function App({ page }) {
   }, [page, handleReset])
 
   return (
-    <Canvas
-      shadows="basic"
-      eventSource={document.getElementById('root')}
-      eventPrefix="client"
-      camera={{ position: [0, 1.5, 14], fov: 45 }}
-      onPointerMissed={() => {
-        if (isZoomedIn) handleReset(true)
-      }}>
-      <fog attach="fog" args={['black', 0, 25]} />
-      <pointLight position={[10, 10, -40]} intensity={5} />
-      <pointLight position={[-10, 10, -20]} intensity={5} />
+    <>
+      <Canvas
+        shadows="basic"
+        eventSource={document.getElementById('root')}
+        eventPrefix="client"
+        camera={{ position: [0, 1.5, 14], fov: 45 }}
+        onPointerMissed={() => {
+          if (isZoomedIn) handleReset(true)
+        }}>
+        <fog attach="fog" args={['black', 0, 25]} />
+        <pointLight position={[10, 10, -40]} intensity={5} />
+        <pointLight position={[-10, 10, -20]} intensity={5} />
 
-      <Model page={page} handleZoomTo={handleZoomTo} isZoomedIn={isZoomedIn} position={[0, -5.5, 3]} rotation={[0, -0.2, 0]} />
+        <Model
+          page={page}
+          handleZoomTo={handleZoomTo}
+          isZoomedIn={isZoomedIn}
+          activeAnnotation={activeAnnotation}
+          setActiveAnnotation={setActiveAnnotation}
+          setInfoOverlay={setInfoOverlay}
+          onTreeHover={onTreeHover}
+          position={[0, -5.5, 3]}
+          rotation={[0, -0.2, 0]}
+        />
 
-      <SoftShadows samples={4} />
-      <ambientLight intensity={0.6} />
-      <Environment preset="city" />
+        <SoftShadows samples={4} />
+        <ambientLight intensity={0.6} />
+        <Environment preset="city" />
 
-      <CameraControls
-        ref={controlsRef}
-        enabled={page === 'home'}
-        minPolarAngle={0}
-        maxPolarAngle={Math.PI / 2}
-        minAzimuthAngle={-Math.PI / 2}
-        maxAzimuthAngle={Math.PI / 2}
-      />
-    </Canvas>
+        <CameraControls
+          ref={controlsRef}
+          enabled={page === 'home'}
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 2}
+          minAzimuthAngle={-Math.PI / 2}
+          maxAzimuthAngle={Math.PI / 2}
+          dollySpeed={0}
+          truckSpeed={0}
+        />
+      </Canvas>
+
+      {/* Info-Text Overlay ÜBER dem Canvas */}
+      {infoOverlay && (
+        <div
+          className={`annotation-info-overlay annotation-fadein ${infoOverlay.side === 'left' ? 'info-align-left' : 'info-align-right'}`}>
+          {infoOverlay.text}
+        </div>
+      )}
+    </>
   )
 }
 
@@ -85,7 +114,7 @@ const annotationData = [
   { name: 'Spiegel', position: [1, 4, -1], info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.' },
 ]
 
-function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
+function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnnotation, setInfoOverlay, onTreeHover, ...props }) {
   const group = useRef()
   const light = useRef()
   const spinRef = useRef()
@@ -153,10 +182,32 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
     }
   })
 
+  // Annotation klick: andere schließen, Info-Overlay setzen
+  const handleAnnotationClick = (index) => {
+    const ann = annotationData[index]
+    if (activeAnnotation === index) {
+      // Gleiche nochmal geklickt → schließen
+      setActiveAnnotation(null)
+      setInfoOverlay(null)
+    } else {
+      setActiveAnnotation(index)
+      // Seite bestimmen: x-Position > 0 = rechts, sonst links
+      const side = ann.position[0] > 0 ? 'right' : 'left'
+      setInfoOverlay({ text: ann.info, side })
+    }
+    if (page === 'home') handleZoomTo(markerRefs.current[index])
+  }
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group ref={spinRef}>
-        <primitive ref={modelRef} object={scene} position={[0, 0, 0]} />
+        <primitive
+          ref={modelRef}
+          object={scene}
+          position={[0, 0, 0]}
+          onPointerEnter={() => onTreeHover && onTreeHover(true)}
+          onPointerLeave={() => onTreeHover && onTreeHover(false)}
+        />
 
         {/* Marker-Boxen für fitToBox */}
         {annotationData.map((ann, i) => (
@@ -172,15 +223,15 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
           </mesh>
         ))}
 
-        {/* Annotations mit Occlusion und Info-Textfeld */}
+        {/* Annotations mit Occlusion */}
         {showAnnotations &&
           annotationData.map((ann, i) => (
             <Annotation
               key={ann.name}
               position={ann.position}
               name={ann.name}
-              info={ann.info}
-              onClick={() => page === 'home' && handleZoomTo(markerRefs.current[i])}
+              isActive={activeAnnotation === i}
+              onClick={() => handleAnnotationClick(i)}
             />
           ))}
       </group>
@@ -192,22 +243,21 @@ function Model({ page, handleZoomTo, isZoomedIn, ...props }) {
   )
 }
 
-function Annotation({ name, info, onClick, ...props }) {
-  const [expanded, setExpanded] = useState(false)
-
+function Annotation({ name, isActive, onClick, ...props }) {
   const handleClick = (e) => {
     e.stopPropagation()
-    setExpanded(!expanded)
     if (onClick) onClick()
   }
 
   return (
     <Html {...props} transform sprite center occlude="blending" style={{ transition: 'opacity 0.3s' }}>
       <div className="annotation-container">
-        <div className="annotation annotation-fadein" onPointerDown={(e) => e.stopPropagation()} onClick={handleClick}>
+        <div
+          className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={handleClick}>
           {name}
         </div>
-        {expanded && <div className="annotation-info annotation-fadein">{info}</div>}
       </div>
     </Html>
   )
