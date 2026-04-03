@@ -66,7 +66,7 @@ export default function App({ page, onTreeHover, onReadMore }) {
 
   const handleReset = useCallback((transition = true) => {
     if (controlsRef.current) {
-      controlsRef.current.setLookAt(0, 1.5, 14, 0, 0, 0, transition)
+      controlsRef.current.setLookAt(0, 2, 14, 0, 0.5, 0, transition)
       setIsZoomedIn(false)
       setActiveAnnotation(null)
       setInfoOverlay(null)
@@ -101,7 +101,7 @@ export default function App({ page, onTreeHover, onReadMore }) {
         shadows="basic"
         eventSource={document.getElementById('root')}
         eventPrefix="client"
-        camera={{ position: [0, 1.5, 14], fov: 45 }}
+        camera={{ position: [0, 2, 14], fov: 45 }}
         onPointerMissed={() => {
           if (isZoomedIn) handleReset(true)
         }}>
@@ -137,13 +137,14 @@ export default function App({ page, onTreeHover, onReadMore }) {
         />
       </Canvas>
 
-      {/* Info-Text Overlay mit Weiterlesen-Button */}
+      {/* Info-Text Overlay mit Weiterlesen-Button — z-index über Annotations */}
       {infoOverlay && (
         <div className="annotation-info-overlay annotation-fadein">
           {infoOverlay.text}
-          <div className="read-more-button" onClick={handleReadMoreClick}>
+          <br />
+          <span className="read-more-button" onClick={handleReadMoreClick}>
             Weiterlesen
-          </div>
+          </span>
         </div>
       )}
     </>

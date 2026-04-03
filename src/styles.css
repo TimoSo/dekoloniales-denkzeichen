@@ -126,24 +126,24 @@ canvas {
   pointer-events: auto;
 }
 
-/* Weiterlesen-Button in der Info-Overlay */
+/* Weiterlesen-Button inline in der Info-Overlay */
 .read-more-button {
   display: inline-block;
-  margin-top: 1em;
-  padding: 0.5em 1.2em;
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 900;
-  font-size: 0.75em;
-  letter-spacing: 0.2em;
-  color: white;
-  background-color: rgb(26, 19, 16);
-  border-radius: 6px;
+  margin-top: 0.3em;
+  padding: 0.3em 0.8em;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 0.85em;
+  letter-spacing: 0.01em;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border-radius: 4px;
   cursor: url('./baobab_up_hover32.png') 32 0, pointer;
   transition: background-color 0.3s ease;
 }
 
 .read-more-button:hover {
-  background-color: rgb(198, 83, 12);
+  background-color: rgb(220, 220, 220);
 }
 
 /* ===================== */
@@ -224,6 +224,9 @@ canvas {
   z-index: 40;
   overflow-y: auto;
   pointer-events: auto;
+  /* Fade am unteren Rand: ab 40% von unten anfangen, bei 15% voll gefadet */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
+  mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
 }
 
 .back-button {
@@ -238,7 +241,7 @@ canvas {
   letter-spacing: 0.3em;
   padding: 0.8em 1.5em;
   border-radius: 8px;
-  background-color: rgb(26, 19, 16);
+  background-color: rgb(0, 105, 76);
   color: rgb(255, 255, 255);
   cursor: url('./baobab_up_hover32.png') 32 0, pointer;
   transition: background-color 0.4s ease;
@@ -246,14 +249,14 @@ canvas {
 }
 
 .back-button:hover {
-  background-color: rgb(198, 83, 12);
+  background-color: rgb(0, 140, 100);
 }
 
 .detail-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6em 2em 4em;
+  padding: 6em 2em 12em;
   max-width: 700px;
   margin: 0 auto;
 }
@@ -261,7 +264,7 @@ canvas {
 .detail-image {
   width: 100%;
   max-width: 550px;
-  border-radius: 10px;
+  border-radius: 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   margin-bottom: 2em;
 }
@@ -271,9 +274,10 @@ canvas {
   font-weight: 900;
   font-size: 1.8em;
   letter-spacing: 0.15em;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 0 0 0.8em;
-  text-align: center;
+  text-align: left;
+  width: 100%;
 }
 
 .detail-text {
@@ -281,14 +285,15 @@ canvas {
   font-size: 1.05em;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
+  color: rgb(0, 0, 0);
+  text-align: left;
   margin: 0;
+  width: 100%;
 }
 
 @media (max-width: 600px) {
   .detail-content {
-    padding: 5em 1.5em 3em;
+    padding: 5em 1.5em 10em;
   }
 
   .detail-title {
