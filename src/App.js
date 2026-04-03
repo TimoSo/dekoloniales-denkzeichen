@@ -1,12 +1,52 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import * as THREE from 'three'
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, extend, useFrame } from '@react-three/fiber'
 import { useGLTF, SoftShadows, Html, CameraControls, Environment } from '@react-three/drei'
 import { easing, geometry } from 'maath'
 
 extend(geometry)
 
-export default function App({ page, onTreeHover }) {
+// Annotation-Daten mit Zusatzinfos und Bildern
+export const annotationData = [
+  {
+    name: 'Handelswege',
+    position: [1.75, 2.5, 2],
+    info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird.',
+    image: '/Baobab_Aufbau_1.jpg',
+  },
+  {
+    name: 'Krone',
+    position: [3.2, 8.8, 0],
+    info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.',
+    image: '/Baobab_Aufbau_2.jpg',
+  },
+  {
+    name: 'Baobab',
+    position: [-0.9, 5.8, 1],
+    info: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen.',
+    image: '/Baobab_Aufbau_3.jpg',
+  },
+  {
+    name: 'Hafen',
+    position: [-1.75, 2.5, -2],
+    info: 'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe, aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen.',
+    image: '/Baobab_Aufbau_4.jpg',
+  },
+  {
+    name: 'Lichter',
+    position: [-2.5, 8.3, 0],
+    info: 'Die Lichter stehen für Erinnerung und Hoffnung.',
+    image: '/Baobab_Aufbau_6.jpg',
+  },
+  {
+    name: 'Spiegel',
+    position: [1, 4, -1],
+    info: 'Du kannst dich aber auch in ihm spiegeln, bei ihm deine eigene Position zum Thema hinterfragen und dich kritisch mit der Kolonialgeschichte auseinandersetzen.',
+    image: '/Baobab_Aufbau_1.jpg',
+  },
+]
+
+export default function App({ page, onTreeHover, onReadMore }) {
   const controlsRef = useRef()
   const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [activeAnnotation, setActiveAnnotation] = useState(null)
@@ -48,6 +88,12 @@ export default function App({ page, onTreeHover }) {
     window.addEventListener('contextmenu', handleContextMenu)
     return () => window.removeEventListener('contextmenu', handleContextMenu)
   }, [page, handleReset])
+
+  const handleReadMoreClick = () => {
+    if (activeAnnotation !== null && onReadMore) {
+      onReadMore(activeAnnotation)
+    }
+  }
 
   return (
     <>
@@ -91,37 +137,18 @@ export default function App({ page, onTreeHover }) {
         />
       </Canvas>
 
-      {/* Info-Text Overlay zentral im unteren Drittel, mit Blur */}
-      {infoOverlay && <div className="annotation-info-overlay annotation-fadein">{infoOverlay.text}</div>}
+      {/* Info-Text Overlay mit Weiterlesen-Button */}
+      {infoOverlay && (
+        <div className="annotation-info-overlay annotation-fadein">
+          {infoOverlay.text}
+          <div className="read-more-button" onClick={handleReadMoreClick}>
+            Weiterlesen
+          </div>
+        </div>
+      )}
     </>
   )
 }
-
-// Annotation-Daten mit Zusatzinfos
-const annotationData = [
-  {
-    name: 'Handelswege',
-    position: [1.75, 2.5, 2],
-    info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird.',
-  },
-  { name: 'Krone', position: [3.2, 8.8, 0], info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.' },
-  {
-    name: 'Baobab',
-    position: [-0.9, 5.8, 1],
-    info: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen.',
-  },
-  {
-    name: 'Hafen',
-    position: [-1.75, 2.5, -2],
-    info: 'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe, aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen.',
-  },
-  { name: 'Lichter', position: [-2.5, 8.3, 0], info: 'Die Lichter stehen für Erinnerung und Hoffnung.' },
-  {
-    name: 'Spiegel',
-    position: [1, 4, -1],
-    info: 'Du kannst dich aber auch in ihm spiegeln, bei ihm deine eigene Position zum Thema hinterfragen und dich kritisch mit der Kolonialgeschichte auseinandersetzen.',
-  },
-]
 
 function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnnotation, setInfoOverlay, onTreeHover, ...props }) {
   const group = useRef()
@@ -129,14 +156,12 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
   const spinRef = useRef()
   const modelRef = useRef()
   const [showAnnotations, setShowAnnotations] = useState(false)
-  // Sichtbarkeit pro Annotation (ob sie vor oder hinter dem Modell ist)
   const [annotationVisibility, setAnnotationVisibility] = useState(annotationData.map(() => true))
 
   const markerRefs = useRef(annotationData.map(() => ({ current: null })))
 
   const { scene } = useGLTF('/Baobab_Website_e11.glb')
 
-  // Annotations nach kurzem Delay einfaden
   useEffect(() => {
     const timer = setTimeout(() => setShowAnnotations(true), 200)
     return () => clearTimeout(timer)
@@ -175,10 +200,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
     let targetPos = [0, 0, 0]
     let targetScale = 2.5
 
-    if (page === 'dekolonialePraxis') {
-      targetPos = [-4, -3, 3]
-      targetScale = 4.5
-    } else if (page === 'kontext') {
+    // Detail-Seite: Baum nach unten, nur Krone sichtbar
+    if (page === 'detail') {
       targetPos = [0, -15, -2]
       targetScale = 4.5
     }
@@ -192,26 +215,22 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
       spinRef.current.rotation.y += delta * 0.3
     }
 
-    // Sichtbarkeit der Annotations berechnen: Ist die Annotation vor oder hinter dem Modellzentrum?
+    // Sichtbarkeit der Annotations berechnen
     if (spinRef.current && showAnnotations) {
       const camera = state.camera
       const newVisibility = annotationData.map((ann) => {
-        // Annotation-Position in Weltkoordinaten umrechnen
         const worldPos = new THREE.Vector3(...ann.position)
         spinRef.current.localToWorld(worldPos)
-        // Modellzentrum in Weltkoordinaten
         const modelCenter = new THREE.Vector3(0, 4, 0)
         spinRef.current.localToWorld(modelCenter)
-        // Prüfen ob Annotation näher zur Kamera ist als das Modellzentrum
         const annDist = camera.position.distanceTo(worldPos)
         const centerDist = camera.position.distanceTo(modelCenter)
-        return annDist < centerDist + 2 // kleiner Puffer
+        return annDist < centerDist + 2
       })
       setAnnotationVisibility(newVisibility)
     }
   })
 
-  // Annotation klick: andere schließen, Info-Overlay setzen
   const handleAnnotationClick = (index) => {
     const ann = annotationData[index]
     if (activeAnnotation === index) {
@@ -235,7 +254,6 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
           onPointerLeave={() => onTreeHover && onTreeHover(false)}
         />
 
-        {/* Marker-Boxen für fitToBox */}
         {annotationData.map((ann, i) => (
           <mesh
             key={ann.name + '-marker'}
@@ -249,8 +267,7 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
           </mesh>
         ))}
 
-        {/* Annotations: Sichtbarkeit per Z-Check statt occlude */}
-        {showAnnotations &&
+        {showAnnotations && page === 'home' &&
           annotationData.map((ann, i) => (
             <Annotation
               key={ann.name}
@@ -288,7 +305,10 @@ function Annotation({ name, isActive, isVisible, onClick, ...props }) {
         pointerEvents: isVisible ? 'auto' : 'none',
       }}>
       <div className="annotation-container">
-        <div className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`} onPointerDown={(e) => e.stopPropagation()} onClick={handleClick}>
+        <div
+          className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`}
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={handleClick}>
           {name}
         </div>
       </div>

@@ -1,78 +1,24 @@
 import { createRoot } from 'react-dom/client'
 import React, { Suspense, useState } from 'react'
 import './styles.css'
-import App from './App'
-import { StraightGallery } from './StraightGallery'
+import App, { annotationData } from './App'
 
-function KontextPage() {
-  return (
-    <div className="page-content kontext-page">
-      <StraightGallery />
-    </div>
-  )
-}
-
-function ArtistsPage() {
-  return (
-    <div className="page-content">
-      <h2>Artists</h2>
-      <p>Hier stehen die Inhalte für die Artists.</p>
-    </div>
-  )
-}
-
-function DekolonialePraxisPage() {
-  return (
-    <div className="page-content">
-      <h2>Dekoloniale Praxis</h2>
-      <p>Hier stehen die Inhalte für die Dekoloniale Praxis.</p>
-    </div>
-  )
-}
-
-function Header({ setPage, page }) {
-  const isHome = page === 'home'
-  const label = isHome ? 'KONTEXT' : 'DENKZEICHEN'
-  const [scribbleVisible, setScribbleVisible] = useState(false)
-
-  const handleClick = () => {
-    if (isHome) {
-      setPage('kontext')
-    } else {
-      setPage('home')
-    }
-  }
+function DetailPage({ annotationIndex, onBack }) {
+  const ann = annotationData[annotationIndex]
+  if (!ann) return null
 
   return (
-    <div className="header">
-      <div
-        className={`header-button ${isHome ? 'header-button-brown' : 'header-button-default'}`}
-        onClick={handleClick}
-        onMouseEnter={() => setScribbleVisible(true)}
-        onMouseLeave={() => setScribbleVisible(false)}>
-        {label}
-        {/* Scribble-Kreis beim Hover */}
-        <img src="/baobab_hover_scribble_e01.png" alt="" className={`header-scribble ${scribbleVisible ? 'scribble-visible' : ''}`} />
+    <div className="detail-page annotation-fadein">
+      <div className="back-button" onClick={onBack}>
+        ZURÜCK
+      </div>
+      <div className="detail-content">
+        <img src={ann.image} alt={ann.name} className="detail-image" />
+        <h2 className="detail-title">{ann.name}</h2>
+        <p className="detail-text">{ann.info}</p>
       </div>
     </div>
   )
-}
-
-function KontextOverlay({ active, closing, originRect }) {
-  // Sphere-Wipe: radiale Ausbreitung vom Button
-  const style = {}
-  if (originRect) {
-    const cx = originRect.left + originRect.width / 2
-    const cy = originRect.top + originRect.height / 2
-    style['--wipe-cx'] = `${cx}px`
-    style['--wipe-cy'] = `${cy}px`
-  }
-
-  let className = 'kontext-overlay'
-  if (active && !closing) className += ' kontext-overlay-active'
-  if (closing) className += ' kontext-overlay-closing'
-
-  return <div className={className} style={style} />
 }
 
 function InfoBox() {
@@ -95,47 +41,25 @@ function InfoBox() {
 function MainApp() {
   const [page, setPage] = useState('home')
   const [titleVisible, setTitleVisible] = useState(true)
-  const [overlayActive, setOverlayActive] = useState(false)
-  const [overlayClosing, setOverlayClosing] = useState(false)
-  const [buttonRect, setButtonRect] = useState(null)
-  // Titel wechselt zur Outline wenn über den Baum gehovert wird
   const [treeHovered, setTreeHovered] = useState(false)
+  const [detailIndex, setDetailIndex] = useState(null)
 
-  const handleSetPage = (newPage) => {
-    if (newPage === 'kontext') {
-      // Button-Position für Sphere-Wipe merken
-      const btn = document.querySelector('.header-button')
-      if (btn) setButtonRect(btn.getBoundingClientRect())
-      setOverlayActive(true)
-      setTimeout(() => {
-        setTitleVisible(false)
-        setPage('kontext')
-      }, 600)
-    } else if (newPage === 'home') {
-      // Sphere-Wipe rückwärts
-      const btn = document.querySelector('.header-button')
-      if (btn) setButtonRect(btn.getBoundingClientRect())
-      setOverlayClosing(true)
-      setPage('home')
-      setTimeout(() => {
-        setOverlayActive(false)
-        setOverlayClosing(false)
-        setTitleVisible(true)
-      }, 2000)
-    } else {
-      setOverlayActive(false)
-      setTitleVisible(false)
-      setPage(newPage)
-    }
+  const handleReadMore = (annotationIndex) => {
+    setTitleVisible(false)
+    setDetailIndex(annotationIndex)
+    setPage('detail')
+  }
+
+  const handleBack = () => {
+    setPage('home')
+    setDetailIndex(null)
+    setTimeout(() => setTitleVisible(true), 50)
   }
 
   return (
     <>
-      <Header setPage={handleSetPage} page={page} />
-      <KontextOverlay active={overlayActive} closing={overlayClosing} originRect={buttonRect} />
-
       <Suspense fallback={null}>
-        <App page={page} onTreeHover={setTreeHovered} />
+        <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} />
       </Suspense>
 
       <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'} ${treeHovered ? 'title-outline' : ''}`}>
@@ -162,7 +86,9 @@ function MainApp() {
       </div>
 
       {page === 'home' && <InfoBox />}
-      {page === 'kontext' && <KontextPage />}
+      {page === 'detail' && detailIndex !== null && (
+        <DetailPage annotationIndex={detailIndex} onBack={handleBack} />
+      )}
     </>
   )
 }
