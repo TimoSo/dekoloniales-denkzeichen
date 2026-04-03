@@ -5,6 +5,7 @@ import App, { annotationData } from './App'
 
 function DetailPage({ annotationIndex, onBack }) {
   const ann = annotationData[annotationIndex]
+  const [imageHovered, setImageHovered] = useState(false)
   if (!ann) return null
 
   return (
@@ -13,9 +14,17 @@ function DetailPage({ annotationIndex, onBack }) {
         ZURÜCK
       </div>
       <div className="detail-content">
-        <img src={ann.image} alt={ann.name} className="detail-image" />
-        <h2 className="detail-title">{ann.name}</h2>
-        <p className="detail-text">{ann.info}</p>
+        <div className="detail-image-wrapper">
+          <h2 className={`detail-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
+          <img
+            src={ann.image}
+            alt={ann.name}
+            className="detail-image"
+            onMouseEnter={() => setImageHovered(true)}
+            onMouseLeave={() => setImageHovered(false)}
+          />
+        </div>
+        <p className="detail-text">{ann.detailText}</p>
       </div>
     </div>
   )

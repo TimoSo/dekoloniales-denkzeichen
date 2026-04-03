@@ -129,7 +129,7 @@ canvas {
 /* Weiterlesen-Button inline in der Info-Overlay */
 .read-more-button {
   display: inline-block;
-  margin-top: 0.3em;
+  margin-top: 0.8em;
   padding: 0.3em 0.8em;
   font-family: inherit;
   font-weight: 400;
@@ -224,7 +224,7 @@ canvas {
   z-index: 40;
   overflow-y: auto;
   pointer-events: auto;
-  /* Fade am unteren Rand: ab 40% von unten anfangen, bei 15% voll gefadet */
+  /* Fade am unteren Rand */
   -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
   mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
 }
@@ -256,30 +256,54 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6em 2em 12em;
-  max-width: 700px;
+  /* Gleicher Abstand oben wie der Zurück-Button */
+  padding: 2em 2em 12em;
+  max-width: 600px;
   margin: 0 auto;
+}
+
+/* Bild-Wrapper: Titel liegt vertikal zentriert über dem Bild */
+.detail-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 1.5em;
 }
 
 .detail-image {
   width: 100%;
-  max-width: 550px;
   border-radius: 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  margin-bottom: 2em;
+  display: block;
 }
 
+/* Titel: vertikal zentriert über dem Bild, etwas nach links rausragend */
 .detail-title {
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 900;
-  font-size: 1.8em;
-  letter-spacing: 0.15em;
+  position: absolute;
+  top: 50%;
+  left: -1.5em;
+  transform: translateY(-50%);
+  font-family: 'Thumpa', sans-serif;
+  font-weight: 100;
+  font-size: 3.5em;
+  letter-spacing: 0em;
   color: rgb(0, 0, 0);
-  margin: 0 0 0.8em;
+  margin: 0;
   text-align: left;
-  width: 100%;
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+  transition: color 0.4s ease, -webkit-text-stroke 0.4s ease;
+  -webkit-text-stroke: 0px transparent;
 }
 
+/* Outline-Version beim Bild-Hover */
+.detail-title-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgb(0, 0, 0);
+}
+
+/* Text: gleiche Breite wie das Bild */
 .detail-text {
   font-family: inter, sans-serif;
   font-size: 1.05em;
@@ -289,15 +313,17 @@ canvas {
   text-align: left;
   margin: 0;
   width: 100%;
+  max-width: 550px;
 }
 
 @media (max-width: 600px) {
   .detail-content {
-    padding: 5em 1.5em 10em;
+    padding: 2em 1.5em 10em;
   }
 
   .detail-title {
-    font-size: 1.3em;
+    font-size: 2em;
+    left: -0.5em;
   }
 
   .detail-text {
