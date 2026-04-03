@@ -225,8 +225,8 @@ canvas {
   overflow-y: auto;
   pointer-events: auto;
   /* Fade am unteren Rand */
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
-  mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 67%, transparent 82%);
+  mask-image: linear-gradient(to bottom, black 0%, black 67%, transparent 82%);
 }
 
 .back-button {
@@ -280,14 +280,14 @@ canvas {
 /* Titel: vertikal zentriert über dem Bild, etwas nach links rausragend */
 .detail-title {
   position: absolute;
-  top: 50%;
-  left: -1.5em;
+  top: 100%;
+  left: -1em;
   transform: translateY(-50%);
   font-family: 'Thumpa', sans-serif;
   font-weight: 100;
-  font-size: 3.5em;
+  font-size: 5em;
   letter-spacing: 0em;
-  color: rgb(0, 0, 0);
+  color: rgb(0, 105, 76);
   margin: 0;
   text-align: left;
   text-transform: uppercase;
@@ -300,18 +300,19 @@ canvas {
 /* Outline-Version beim Bild-Hover */
 .detail-title-outline {
   color: transparent;
-  -webkit-text-stroke: 2px rgb(0, 0, 0);
+  -webkit-text-stroke: 2px rgb(0, 105, 76);
 }
 
 /* Text: gleiche Breite wie das Bild */
 .detail-text {
-  font-family: inter, sans-serif;
+  font-family: inter;
   font-size: 1.05em;
   font-weight: 300;
-  line-height: 1.8;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
   color: rgb(0, 0, 0);
   text-align: left;
-  margin: 0;
+  margin: 2;
   width: 100%;
   max-width: 550px;
 }
@@ -356,9 +357,9 @@ canvas {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 20vw;
+  width: 25vw;
   min-width: 220px;
-  max-height: 20vh;
+  max-height: 40vh;
   overflow-y: auto;
   background-color: rgb(22, 22, 21);
   color: #cecece;
@@ -379,12 +380,12 @@ canvas {
 }
 
 .info-box p {
-  font-family: 'Josefin Sans', sans-serif;
+  font-family: inter, sans-serif;
   font-size: 0.85em;
   font-weight: 300;
   line-height: 2em;
-  letter-spacing: 0.05em;
-  margin: 0;
+  letter-spacing: 0.02em;
+  margin: 1;
 }
 
 /* ===================== */

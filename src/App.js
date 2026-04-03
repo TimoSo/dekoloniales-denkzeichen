@@ -12,42 +12,48 @@ export const annotationData = [
     name: 'Handelswege',
     position: [1.75, 2.5, 2],
     info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist.',
-    detailText: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird. Die Kiste verweist auf die materiellen Grundlagen des Kolonialismus — auf Güter, die unter Zwang produziert und über transkontinentale Routen verschifft wurden. Dortmund war als Industriestandort Teil dieser globalen Lieferketten, die Rohstoffe aus den kolonisierten Gebieten verarbeiteten und damit direkt von kolonialer Ausbeutung profitierten.',
+    detailText:
+      'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird. Die Kiste verweist auf die materiellen Grundlagen des Kolonialismus — auf Güter, die unter Zwang produziert und über transkontinentale Routen verschifft wurden. Dortmund war als Industriestandort Teil dieser globalen Lieferketten, die Rohstoffe aus den kolonisierten Gebieten verarbeiteten und damit direkt von kolonialer Ausbeutung profitierten.',
     image: '/Baobab_Aufbau_1.jpg',
   },
   {
     name: 'Krone',
     position: [3.2, 8.8, 0],
     info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.',
-    detailText: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur. In vielen westafrikanischen Kulturen ist der Baobab ein Versammlungsort — unter seiner Krone werden Geschichten erzählt, Konflikte gelöst und Wissen weitergegeben. Die ausladende Krone des Denkzeichens greift diese Tradition auf und schafft einen symbolischen Raum des Austauschs und der Begegnung. Sie erinnert daran, dass Widerstand gegen koloniale Strukturen immer auch ein Akt der Gemeinschaft war und ist. Die Krone wächst nach oben, dem Licht entgegen — ein Zeichen dafür, dass aus der Auseinandersetzung mit der Vergangenheit Neues entstehen kann.',
+    detailText:
+      'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur. In vielen westafrikanischen Kulturen ist der Baobab ein Versammlungsort — unter seiner Krone werden Geschichten erzählt, Konflikte gelöst und Wissen weitergegeben. Die ausladende Krone des Denkzeichens greift diese Tradition auf und schafft einen symbolischen Raum des Austauschs und der Begegnung. Sie erinnert daran, dass Widerstand gegen koloniale Strukturen immer auch ein Akt der Gemeinschaft war und ist. Die Krone wächst nach oben, dem Licht entgegen — ein Zeichen dafür, dass aus der Auseinandersetzung mit der Vergangenheit Neues entstehen kann.',
     image: '/Baobab_Aufbau_2.jpg',
   },
   {
     name: 'Baobab',
     position: [-0.9, 5.8, 1],
     info: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch.',
-    detailText: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen. Der Baobab-Baum kann über tausend Jahre alt werden und speichert in seinem Stamm enorme Mengen Wasser — er ist ein Überlebenskünstler, der selbst in den trockensten Regionen gedeiht. Diese Widerstandsfähigkeit macht ihn zum Symbol für die Stärke und das kulturelle Gedächtnis der afrikanischen Diaspora. In Dortmund steht er als Zeichen dafür, dass die Geschichten und Perspektiven, die durch den Kolonialismus unterdrückt wurden, nicht verschwunden sind — sie leben weiter und fordern ihren Platz im öffentlichen Raum ein.',
+    detailText:
+      'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen. Der Baobab-Baum kann über tausend Jahre alt werden und speichert in seinem Stamm enorme Mengen Wasser — er ist ein Überlebenskünstler, der selbst in den trockensten Regionen gedeiht. Diese Widerstandsfähigkeit macht ihn zum Symbol für die Stärke und das kulturelle Gedächtnis der afrikanischen Diaspora. In Dortmund steht er als Zeichen dafür, dass die Geschichten und Perspektiven, die durch den Kolonialismus unterdrückt wurden, nicht verschwunden sind — sie leben weiter und fordern ihren Platz im öffentlichen Raum ein.',
     image: '/Baobab_Aufbau_3.jpg',
   },
   {
     name: 'Hafen',
     position: [-1.75, 2.5, -2],
     info: 'Der Dortmunder Hafen steht in unmittelbarer Verbindung mit der Kolonialgeschichte.',
-    detailText: 'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen. Der Hafen war ein Knotenpunkt im Netzwerk kolonialer Warenströme — Kaffee, Kakao, Palmöl und andere Güter, die unter ausbeuterischen Bedingungen produziert wurden, fanden hier ihren Weg in die deutsche Wirtschaft. Diese Geschichte ist in der städtischen Erinnerung kaum präsent, obwohl sie die Grundlage für den industriellen Wohlstand der Region mitgelegt hat. Das Denkzeichen macht diese unsichtbaren Verbindungen sichtbar und lädt dazu ein, den Hafen als einen Ort mit kolonialer Vergangenheit neu zu betrachten.',
+    detailText:
+      'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen. Der Hafen war ein Knotenpunkt im Netzwerk kolonialer Warenströme — Kaffee, Kakao, Palmöl und andere Güter, die unter ausbeuterischen Bedingungen produziert wurden, fanden hier ihren Weg in die deutsche Wirtschaft. Diese Geschichte ist in der städtischen Erinnerung kaum präsent, obwohl sie die Grundlage für den industriellen Wohlstand der Region mitgelegt hat. Das Denkzeichen macht diese unsichtbaren Verbindungen sichtbar und lädt dazu ein, den Hafen als einen Ort mit kolonialer Vergangenheit neu zu betrachten.',
     image: '/Baobab_Aufbau_4.jpg',
   },
   {
     name: 'Lichter',
     position: [-2.5, 8.3, 0],
     info: 'Die Lichter stehen für Erinnerung und Hoffnung.',
-    detailText: 'Die Lichter stehen für Erinnerung und Hoffnung. Sie sind ein zentrales gestalterisches Element des Denkzeichens und verweisen auf die Menschen, deren Geschichten durch den Kolonialismus ausgelöscht oder unsichtbar gemacht wurden. Jedes Licht steht für eine Stimme, eine Erfahrung, eine Perspektive, die gehört werden will. In der Dunkelheit leuchten sie als Zeichen der Hoffnung — dafür, dass Erinnerung nicht Stillstand bedeutet, sondern der Ausgangspunkt für Veränderung sein kann. Die Lichter schaffen eine Atmosphäre der Andacht und laden Besuchende dazu ein, innezuhalten und sich mit den Geschichten auseinanderzusetzen, die dieser Ort in sich trägt.',
+    detailText:
+      'Die Lichter stehen für Erinnerung und Hoffnung. Sie sind ein zentrales gestalterisches Element des Denkzeichens und verweisen auf die Menschen, deren Geschichten durch den Kolonialismus ausgelöscht oder unsichtbar gemacht wurden. Jedes Licht steht für eine Stimme, eine Erfahrung, eine Perspektive, die gehört werden will. In der Dunkelheit leuchten sie als Zeichen der Hoffnung — dafür, dass Erinnerung nicht Stillstand bedeutet, sondern der Ausgangspunkt für Veränderung sein kann. Die Lichter schaffen eine Atmosphäre der Andacht und laden Besuchende dazu ein, innezuhalten und sich mit den Geschichten auseinanderzusetzen, die dieser Ort in sich trägt.',
     image: '/Baobab_Aufbau_6.jpg',
   },
   {
     name: 'Spiegel',
     position: [1, 4, -1],
     info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.',
-    detailText: 'Du kannst dich aber auch in ihm spiegeln, bei ihm deine eigene Position zum Thema hinterfragen und dich kritisch mit der Kolonialgeschichte auseinandersetzen. Der Spiegel ist bewusst als interaktives Element gestaltet — er fordert Besuchende auf, sich selbst in Bezug zur kolonialen Vergangenheit zu setzen. Kolonialismus ist keine abgeschlossene Geschichte, sondern wirkt in Strukturen, Denkmustern und Machtverhältnissen bis heute fort. Der Spiegel fragt: Wo stehe ich? Welche Privilegien habe ich? Wie profitiere ich möglicherweise von Strukturen, die in der Kolonialzeit geschaffen wurden? Diese Fragen sind unbequem, aber notwendig — denn nur durch Selbstreflexion kann eine echte dekoloniale Praxis entstehen.',
+    detailText:
+      'Du kannst dich aber auch in ihm spiegeln, bei ihm deine eigene Position zum Thema hinterfragen und dich kritisch mit der Kolonialgeschichte auseinandersetzen. Der Spiegel ist bewusst als interaktives Element gestaltet — er fordert Besuchende auf, sich selbst in Bezug zur kolonialen Vergangenheit zu setzen. Kolonialismus ist keine abgeschlossene Geschichte, sondern wirkt in Strukturen, Denkmustern und Machtverhältnissen bis heute fort. Der Spiegel fragt: Wo stehe ich? Welche Privilegien habe ich? Wie profitiere ich möglicherweise von Strukturen, die in der Kolonialzeit geschaffen wurden? Diese Fragen sind unbequem, aber notwendig — denn nur durch Selbstreflexion kann eine echte dekoloniale Praxis entstehen.',
     image: '/Baobab_Aufbau_1.jpg',
   },
 ]
@@ -123,7 +129,7 @@ export default function App({ page, onTreeHover, onReadMore }) {
           setActiveAnnotation={setActiveAnnotation}
           setInfoOverlay={setInfoOverlay}
           onTreeHover={onTreeHover}
-          position={[0, -5.5, 3]}
+          position={[0, -5, 3]}
           rotation={[0, -0.2, 0]}
         />
 
@@ -274,7 +280,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
           </mesh>
         ))}
 
-        {showAnnotations && page === 'home' &&
+        {showAnnotations &&
+          page === 'home' &&
           annotationData.map((ann, i) => (
             <Annotation
               key={ann.name}
@@ -312,10 +319,7 @@ function Annotation({ name, isActive, isVisible, onClick, ...props }) {
         pointerEvents: isVisible ? 'auto' : 'none',
       }}>
       <div className="annotation-container">
-        <div
-          className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`}
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={handleClick}>
+        <div className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`} onPointerDown={(e) => e.stopPropagation()} onClick={handleClick}>
           {name}
         </div>
       </div>

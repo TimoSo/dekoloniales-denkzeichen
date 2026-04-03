@@ -16,13 +16,7 @@ function DetailPage({ annotationIndex, onBack }) {
       <div className="detail-content">
         <div className="detail-image-wrapper">
           <h2 className={`detail-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
-          <img
-            src={ann.image}
-            alt={ann.name}
-            className="detail-image"
-            onMouseEnter={() => setImageHovered(true)}
-            onMouseLeave={() => setImageHovered(false)}
-          />
+          <img src={ann.image} alt={ann.name} className="detail-image" onMouseEnter={() => setImageHovered(true)} onMouseLeave={() => setImageHovered(false)} />
         </div>
         <p className="detail-text">{ann.detailText}</p>
       </div>
@@ -37,11 +31,11 @@ function InfoBox() {
     <>
       <img src="/info_button_e01.png" alt="Info" className="info-button" onClick={() => setOpen((prev) => !prev)} />
       <div className={`info-box ${open ? 'info-box-open' : ''}`}>
-        <p>
-          Klicke auf die Buttons um an sie ranzuzoomen.
-          <br />
-          Klicke ins Leere, um zur normalen Ansicht zurück zu kehren.
-        </p>
+        <ul>
+          <li>Klicke auf die Buttons um mehr zu erfahren.</li>
+          <li>Mit gedrückter Maustaste kannst du den Baum bewegen.</li>
+          <li>Wenn du ins Leere klickst, gelangst du zur normalen Ansicht.</li>
+        </ul>
       </div>
     </>
   )
@@ -95,9 +89,7 @@ function MainApp() {
       </div>
 
       {page === 'home' && <InfoBox />}
-      {page === 'detail' && detailIndex !== null && (
-        <DetailPage annotationIndex={detailIndex} onBack={handleBack} />
-      )}
+      {page === 'detail' && detailIndex !== null && <DetailPage annotationIndex={detailIndex} onBack={handleBack} />}
     </>
   )
 }
