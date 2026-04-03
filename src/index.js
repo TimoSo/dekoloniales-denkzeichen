@@ -52,11 +52,7 @@ function Header({ setPage, page }) {
         onMouseLeave={() => setScribbleVisible(false)}>
         {label}
         {/* Scribble-Kreis beim Hover */}
-        <img
-          src="/baobab_hover_scribble_e01.png"
-          alt=""
-          className={`header-scribble ${scribbleVisible ? 'scribble-visible' : ''}`}
-        />
+        <img src="/baobab_hover_scribble_e01.png" alt="" className={`header-scribble ${scribbleVisible ? 'scribble-visible' : ''}`} />
       </div>
     </div>
   )
@@ -167,8 +163,6 @@ function MainApp() {
 
       {page === 'home' && <InfoBox />}
       {page === 'kontext' && <KontextPage />}
-      {page === 'artists' && <ArtistsPage />}
-      {page === 'dekolonialePraxis' && <DekolonialePraxisPage />}
     </>
   )
 }

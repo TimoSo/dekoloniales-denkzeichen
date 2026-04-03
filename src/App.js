@@ -92,23 +92,35 @@ export default function App({ page, onTreeHover }) {
       </Canvas>
 
       {/* Info-Text Overlay zentral im unteren Drittel, mit Blur */}
-      {infoOverlay && (
-        <div className="annotation-info-overlay annotation-fadein">
-          {infoOverlay.text}
-        </div>
-      )}
+      {infoOverlay && <div className="annotation-info-overlay annotation-fadein">{infoOverlay.text}</div>}
     </>
   )
 }
 
 // Annotation-Daten mit Zusatzinfos
 const annotationData = [
-  { name: 'Handelswege', position: [1.75, 2.5, 2], info: 'Die Handelswege symbolisieren den kolonialen Handel und die Ausbeutung von Ressourcen.' },
+  {
+    name: 'Handelswege',
+    position: [1.75, 2.5, 2],
+    info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird.',
+  },
   { name: 'Krone', position: [3.2, 8.8, 0], info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.' },
-  { name: 'Baobab', position: [-0.9, 5.8, 1], info: 'Der Baobab ist ein Symbol für Stärke und kulturelles Gedächtnis.' },
-  { name: 'Hafen', position: [-1.75, 2.5, -2], info: 'Der Hafen verweist auf den transatlantischen Handel und seine Folgen.' },
+  {
+    name: 'Baobab',
+    position: [-0.9, 5.8, 1],
+    info: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen.',
+  },
+  {
+    name: 'Hafen',
+    position: [-1.75, 2.5, -2],
+    info: 'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe, aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen.',
+  },
   { name: 'Lichter', position: [-2.5, 8.3, 0], info: 'Die Lichter stehen für Erinnerung und Hoffnung.' },
-  { name: 'Spiegel', position: [1, 4, -1], info: 'Der Spiegel lädt zur Selbstreflexion über koloniale Kontinuitäten ein.' },
+  {
+    name: 'Spiegel',
+    position: [1, 4, -1],
+    info: 'Du kannst dich aber auch in ihm spiegeln, bei ihm deine eigene Position zum Thema hinterfragen und dich kritisch mit der Kolonialgeschichte auseinandersetzen.',
+  },
 ]
 
 function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnnotation, setInfoOverlay, onTreeHover, ...props }) {
@@ -276,10 +288,7 @@ function Annotation({ name, isActive, isVisible, onClick, ...props }) {
         pointerEvents: isVisible ? 'auto' : 'none',
       }}>
       <div className="annotation-container">
-        <div
-          className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`}
-          onPointerDown={(e) => e.stopPropagation()}
-          onClick={handleClick}>
+        <div className={`annotation annotation-fadein ${isActive ? 'annotation-active' : ''}`} onPointerDown={(e) => e.stopPropagation()} onClick={handleClick}>
           {name}
         </div>
       </div>
