@@ -332,8 +332,8 @@ canvas {
   align-items: center;
   /* Gleicher Abstand oben wie der Zurück-Button */
   padding: 2em 2em 12em;
-  max-width: 35vw;
-  min-width: 350px;
+  /* Skaliert linear von ~33% (16:9) bis ~90% (9:16) */
+  max-width: min(90vw, max(33vw, 55vh));
   margin: 0 auto;
 }
 
@@ -393,13 +393,11 @@ canvas {
 @media (max-width: 600px) {
   .detail-content {
     padding: 2em 1.5em 10em;
-    max-width: 90vw;
-    min-width: unset;
   }
 
   .detail-title {
-    font-size: 2em;
-    left: -0.5em;
+    font-size: 3.5em;
+    left: -0.3em;
   }
 
   .detail-text {

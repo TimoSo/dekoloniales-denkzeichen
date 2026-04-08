@@ -96,7 +96,10 @@ export default function App({ page, onTreeHover, onReadMore, onBack }) {
     } else if (page === 'home') {
       handleReset(true)
     } else if (page === 'detail') {
-      // Kein Kamera-Reset — Baum fährt sanft über useFrame nach unten
+      // Kamera sanft zur Standardposition, damit Baum immer gleich steht
+      if (controlsRef.current) {
+        controlsRef.current.setLookAt(0, 2, 14, 0, 0.5, 0, true)
+      }
       setIsZoomedIn(false)
       setActiveAnnotation(null)
     }
@@ -250,8 +253,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
 
     // Detail-Seite: Baum nach unten, nur Krone sichtbar
     if (page === 'detail') {
-      targetPos = [0, -15, -2]
-      targetScale = 4.5
+      targetPos = [0, -10, -2]
+      targetScale = 3.5
     }
 
     if (modelRef.current) {

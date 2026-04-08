@@ -104,7 +104,7 @@ function MainApp() {
         <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} onBack={handleBack} />
       </Suspense>
 
-      <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'} ${treeHovered ? 'title-outline' : ''}`}>
+      <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'} ${treeHovered && page === 'home' ? 'title-outline' : ''}`}>
         <h1 className="desktop-title">
           DEKOLONIALES
           <br />
