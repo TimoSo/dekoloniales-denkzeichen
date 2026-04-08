@@ -1,24 +1,30 @@
 import { createRoot } from 'react-dom/client'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, useState, useEffect } from 'react'
 import './styles.css'
 import App, { annotationData } from './App'
 
 function DetailPage({ annotationIndex, onBack }) {
   const ann = annotationData[annotationIndex]
   const [imageHovered, setImageHovered] = useState(false)
+  const [leaving, setLeaving] = useState(false)
   if (!ann) return null
 
+  const handleBack = () => {
+    setLeaving(true)
+    setTimeout(() => onBack(), 600)
+  }
+
   return (
-    <div className="detail-page annotation-fadein">
-      <div className="back-button" onClick={onBack}>
+    <div className={`detail-page ${leaving ? 'detail-page-exit' : ''}`}>
+      <div className="back-button detail-enter-image" onClick={handleBack}>
         ZURÜCK
       </div>
       <div className="detail-content">
-        <div className="detail-image-wrapper">
-          <h2 className={`detail-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
+        <div className="detail-image-wrapper detail-enter-image">
+          <h2 className={`detail-title detail-enter-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
           <img src={ann.image} alt={ann.name} className="detail-image" onMouseEnter={() => setImageHovered(true)} onMouseLeave={() => setImageHovered(false)} />
         </div>
-        <p className="detail-text">{ann.detailText}</p>
+        <p className="detail-text detail-enter-text">{ann.detailText}</p>
       </div>
     </div>
   )
@@ -46,6 +52,15 @@ function MainApp() {
   const [titleVisible, setTitleVisible] = useState(true)
   const [treeHovered, setTreeHovered] = useState(false)
   const [detailIndex, setDetailIndex] = useState(null)
+
+  // Hintergrund-Gradient abdunkeln auf Detail-Seite
+  useEffect(() => {
+    if (page === 'detail') {
+      document.body.classList.add('detail-bg')
+    } else {
+      document.body.classList.remove('detail-bg')
+    }
+  }, [page])
 
   const handleReadMore = (annotationIndex) => {
     setTitleVisible(false)

@@ -63,6 +63,8 @@ export default function App({ page, onTreeHover, onReadMore }) {
   const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [activeAnnotation, setActiveAnnotation] = useState(null)
   const [infoOverlay, setInfoOverlay] = useState(null)
+  const [overlayExiting, setOverlayExiting] = useState(false)
+  const [exitingOverlayData, setExitingOverlayData] = useState(null)
 
   const handleZoomTo = (markerRef) => {
     if (controlsRef.current && markerRef.current) {
@@ -85,8 +87,19 @@ export default function App({ page, onTreeHover, onReadMore }) {
     }
   }, [])
 
+  // Kamera-Reset: nur beim ersten Render instant, bei Rückkehr zu Home sanft
+  const hasRendered = useRef(false)
   useEffect(() => {
-    handleReset(false)
+    if (!hasRendered.current) {
+      handleReset(false)
+      hasRendered.current = true
+    } else if (page === 'home') {
+      handleReset(true)
+    } else if (page === 'detail') {
+      // Kein Kamera-Reset — Baum fährt sanft über useFrame nach unten
+      setIsZoomedIn(false)
+      setActiveAnnotation(null)
+    }
   }, [page, handleReset])
 
   // Rechtsklick: Kamera zurück zur Ursprungsposition
@@ -103,7 +116,17 @@ export default function App({ page, onTreeHover, onReadMore }) {
 
   const handleReadMoreClick = () => {
     if (activeAnnotation !== null && onReadMore) {
+      // Overlay-Exit-Animation starten, Baum sofort bewegen
+      setExitingOverlayData(infoOverlay)
+      setOverlayExiting(true)
+      setInfoOverlay(null)
+      setActiveAnnotation(null)
       onReadMore(activeAnnotation)
+      // Overlay nach Animation entfernen
+      setTimeout(() => {
+        setOverlayExiting(false)
+        setExitingOverlayData(null)
+      }, 1500)
     }
   }
 
@@ -157,6 +180,15 @@ export default function App({ page, onTreeHover, onReadMore }) {
           <span className="read-more-button" onClick={handleReadMoreClick}>
             Weiterlesen
           </span>
+        </div>
+      )}
+
+      {/* Overlay Exit-Animation: fliegt nach unten raus */}
+      {overlayExiting && exitingOverlayData && (
+        <div className="annotation-info-overlay overlay-exit">
+          {exitingOverlayData.text}
+          <br />
+          <span className="read-more-button">Weiterlesen</span>
         </div>
       )}
     </>
