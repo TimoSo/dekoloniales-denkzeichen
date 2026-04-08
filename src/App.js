@@ -252,7 +252,7 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
 
     // Detail-Seite: Baum nach unten, Kamera zurück zur Standardposition
     if (page === 'detail') {
-      targetPos = [0, -10, -2]
+      targetPos = [0, -11, -2]
       targetScale = 3.5
       // Beim ersten Frame: aktuelles Blickziel der Kamera erfassen
       if (!detailTransitionStarted.current) {
@@ -274,12 +274,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
     }
     easing.damp3(spinRef.current.position, targetPos, 0.8, delta)
 
-    if (spinRef.current && !isZoomedIn && page === 'home') {
+    if (spinRef.current && !isZoomedIn) {
       spinRef.current.rotation.y += delta * 0.3
-    }
-    // Auf Detail-Seite: Rotation sanft auf 0 zurücksetzen
-    if (spinRef.current && page === 'detail') {
-      easing.damp(spinRef.current.rotation, 'y', 0, 0.8, delta)
     }
 
     // Sichtbarkeit der Annotations berechnen
