@@ -262,8 +262,12 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
     }
     easing.damp3(spinRef.current.position, targetPos, 0.8, delta)
 
-    if (spinRef.current && !isZoomedIn) {
+    if (spinRef.current && !isZoomedIn && page === 'home') {
       spinRef.current.rotation.y += delta * 0.3
+    }
+    // Auf Detail-Seite: Rotation sanft auf 0 zurücksetzen
+    if (spinRef.current && page === 'detail') {
+      easing.damp(spinRef.current.rotation, 'y', 0, 0.8, delta)
     }
 
     // Sichtbarkeit der Annotations berechnen
