@@ -207,6 +207,8 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
   const [annotationVisibility, setAnnotationVisibility] = useState(annotationData.map(() => true))
 
   const markerRefs = useRef(annotationData.map(() => ({ current: null })))
+  const lookAtRef = useRef(new THREE.Vector3(0, 0.5, 0))
+  const detailTransitionStarted = useRef(false)
 
   const { scene } = useGLTF('/Baobab_Website_e11.glb')
 
@@ -252,9 +254,19 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
     if (page === 'detail') {
       targetPos = [0, -10, -2]
       targetScale = 3.5
-      // Kamera direkt im Frame zurücksetzen (CameraControls ist disabled)
+      // Beim ersten Frame: aktuelles Blickziel der Kamera erfassen
+      if (!detailTransitionStarted.current) {
+        const dir = new THREE.Vector3()
+        state.camera.getWorldDirection(dir)
+        lookAtRef.current.copy(state.camera.position).add(dir.multiplyScalar(14))
+        detailTransitionStarted.current = true
+      }
+      // Kamera-Position und Blickziel sanft interpolieren
       easing.damp3(state.camera.position, [0, 2, 14], 0.8, delta)
-      state.camera.lookAt(0, 0.5, 0)
+      easing.damp3(lookAtRef.current, [0, 0.5, 0], 0.8, delta)
+      state.camera.lookAt(lookAtRef.current)
+    } else {
+      detailTransitionStarted.current = false
     }
 
     if (modelRef.current) {
