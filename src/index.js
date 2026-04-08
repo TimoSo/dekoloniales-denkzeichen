@@ -3,26 +3,48 @@ import React, { Suspense, useState, useEffect } from 'react'
 import './styles.css'
 import App, { annotationData } from './App'
 
-function DetailPage({ annotationIndex, onBack }) {
+function DetailPage({ annotationIndex, onBack, leaving }) {
   const ann = annotationData[annotationIndex]
   const [imageHovered, setImageHovered] = useState(false)
-  const [leaving, setLeaving] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 })
   if (!ann) return null
 
-  const handleBack = () => {
-    setLeaving(true)
-    setTimeout(() => onBack(), 600)
+  // Mausposition für dynamischen Schatten tracken
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({
+        x: e.clientX / window.innerWidth,
+        y: e.clientY / window.innerHeight,
+      })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  // Schatten fällt entgegengesetzt zur Mausposition (Maus = Lichtquelle)
+  const shadowX = (mousePos.x - 0.5) * -15
+  const shadowY = (mousePos.y - 0.5) * -15
+  const imageShadowStyle = {
+    boxShadow: `${shadowX}px ${shadowY}px 25px rgba(0, 0, 0, 0.15)`,
+    transition: 'box-shadow 0.3s ease',
   }
 
   return (
     <div className={`detail-page ${leaving ? 'detail-page-exit' : ''}`}>
-      <div className="back-button detail-enter-image" onClick={handleBack}>
+      <div className="back-button detail-enter-image" onClick={onBack}>
         ZURÜCK
       </div>
       <div className="detail-content">
         <div className="detail-image-wrapper detail-enter-image">
           <h2 className={`detail-title detail-enter-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
-          <img src={ann.image} alt={ann.name} className="detail-image" onMouseEnter={() => setImageHovered(true)} onMouseLeave={() => setImageHovered(false)} />
+          <img
+            src={ann.image}
+            alt={ann.name}
+            className="detail-image"
+            style={imageShadowStyle}
+            onMouseEnter={() => setImageHovered(true)}
+            onMouseLeave={() => setImageHovered(false)}
+          />
         </div>
         <p className="detail-text detail-enter-text">{ann.detailText}</p>
       </div>
@@ -52,15 +74,7 @@ function MainApp() {
   const [titleVisible, setTitleVisible] = useState(true)
   const [treeHovered, setTreeHovered] = useState(false)
   const [detailIndex, setDetailIndex] = useState(null)
-
-  // Hintergrund-Gradient abdunkeln auf Detail-Seite
-  useEffect(() => {
-    if (page === 'detail') {
-      document.body.classList.add('detail-bg')
-    } else {
-      document.body.classList.remove('detail-bg')
-    }
-  }, [page])
+  const [detailExiting, setDetailExiting] = useState(false)
 
   const handleReadMore = (annotationIndex) => {
     setTitleVisible(false)
@@ -68,16 +82,25 @@ function MainApp() {
     setPage('detail')
   }
 
+  // Zurück: Detail-Exit und Baum-Animation gleichzeitig
   const handleBack = () => {
+    if (detailExiting) return
+    setDetailExiting(true)
     setPage('home')
-    setDetailIndex(null)
-    setTimeout(() => setTitleVisible(true), 50)
+    setTimeout(() => {
+      setDetailExiting(false)
+      setDetailIndex(null)
+      setTitleVisible(true)
+    }, 600)
   }
 
   return (
     <>
+      {/* Hintergrund-Gradient-Overlay für Detail-Seite */}
+      <div className={`bg-overlay ${page === 'detail' || detailExiting ? 'bg-overlay-active' : ''}`} />
+
       <Suspense fallback={null}>
-        <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} />
+        <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} onBack={handleBack} />
       </Suspense>
 
       <div className={`main-background-title ${titleVisible ? 'title-visible' : 'title-hidden'} ${treeHovered ? 'title-outline' : ''}`}>
@@ -103,8 +126,10 @@ function MainApp() {
         </h1>
       </div>
 
-      {page === 'home' && <InfoBox />}
-      {page === 'detail' && detailIndex !== null && <DetailPage annotationIndex={detailIndex} onBack={handleBack} />}
+      {page === 'home' && !detailExiting && <InfoBox />}
+      {(page === 'detail' || detailExiting) && detailIndex !== null && (
+        <DetailPage annotationIndex={detailIndex} onBack={handleBack} leaving={detailExiting} />
+      )}
     </>
   )
 }

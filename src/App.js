@@ -58,7 +58,7 @@ export const annotationData = [
   },
 ]
 
-export default function App({ page, onTreeHover, onReadMore }) {
+export default function App({ page, onTreeHover, onReadMore, onBack }) {
   const controlsRef = useRef()
   const [isZoomedIn, setIsZoomedIn] = useState(false)
   const [activeAnnotation, setActiveAnnotation] = useState(null)
@@ -102,17 +102,19 @@ export default function App({ page, onTreeHover, onReadMore }) {
     }
   }, [page, handleReset])
 
-  // Rechtsklick: Kamera zurück zur Ursprungsposition
+  // Rechtsklick: auf Home Kamera zurücksetzen, auf Detail zurück zur Startseite
   useEffect(() => {
     const handleContextMenu = (e) => {
+      e.preventDefault()
       if (page === 'home') {
-        e.preventDefault()
         handleReset(true)
+      } else if (page === 'detail' && onBack) {
+        onBack()
       }
     }
     window.addEventListener('contextmenu', handleContextMenu)
     return () => window.removeEventListener('contextmenu', handleContextMenu)
-  }, [page, handleReset])
+  }, [page, handleReset, onBack])
 
   const handleReadMoreClick = () => {
     if (activeAnnotation !== null && onReadMore) {
@@ -152,6 +154,7 @@ export default function App({ page, onTreeHover, onReadMore }) {
           setActiveAnnotation={setActiveAnnotation}
           setInfoOverlay={setInfoOverlay}
           onTreeHover={onTreeHover}
+          onBack={onBack}
           position={[0, -5, 3]}
           rotation={[0, -0.2, 0]}
         />
@@ -195,7 +198,7 @@ export default function App({ page, onTreeHover, onReadMore }) {
   )
 }
 
-function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnnotation, setInfoOverlay, onTreeHover, ...props }) {
+function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnnotation, setInfoOverlay, onTreeHover, onBack, ...props }) {
   const group = useRef()
   const light = useRef()
   const spinRef = useRef()
@@ -297,6 +300,9 @@ function Model({ page, handleZoomTo, isZoomedIn, activeAnnotation, setActiveAnno
           position={[0, 0, 0]}
           onPointerEnter={() => onTreeHover && onTreeHover(true)}
           onPointerLeave={() => onTreeHover && onTreeHover(false)}
+          onClick={() => {
+            if (page === 'detail' && onBack) onBack()
+          }}
         />
 
         {annotationData.map((ann, i) => (

@@ -43,9 +43,8 @@ body {
   cursor: url('./baobab_up32.png') 16 0, auto;
 }
 
-/* Dunklerer Hintergrund auf der Detail-Seite (Gradient-Overlay) */
-body::after {
-  content: '';
+/* Hintergrund-Gradient-Overlay für Detail-Seite */
+.bg-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -58,7 +57,7 @@ body::after {
   pointer-events: none;
 }
 
-body.detail-bg::after {
+.bg-overlay-active {
   opacity: 1;
 }
 
@@ -280,22 +279,22 @@ canvas {
   }
 }
 
-/* Gestaffelte Einblendung: Bild zuerst */
+/* Gestaffelte Einblendung: Bild 0.3s nach Klick */
 .detail-enter-image {
   opacity: 0;
-  animation: fade-in 1.5s ease forwards;
+  animation: fade-in 1.2s ease 0.3s forwards;
 }
 
-/* Titel 0.5s nach dem Bild */
+/* Titel 0.6s nach Klick */
 .detail-enter-title {
   opacity: 0;
-  animation: fade-in 1s ease 0.5s forwards;
+  animation: fade-in 1s ease 0.6s forwards;
 }
 
-/* Text zeile für zeile von oben nach unten aufdecken */
+/* Text zeile für zeile ab 0.9s nach Klick */
 .detail-enter-text {
   clip-path: inset(0 0 100% 0);
-  animation: text-reveal 2s ease 1.5s forwards;
+  animation: text-reveal 2s ease 0.9s forwards;
 }
 
 @keyframes text-reveal {
@@ -333,7 +332,8 @@ canvas {
   align-items: center;
   /* Gleicher Abstand oben wie der Zurück-Button */
   padding: 2em 2em 12em;
-  max-width: 600px;
+  max-width: 35vw;
+  min-width: 350px;
   margin: 0 auto;
 }
 
@@ -341,14 +341,13 @@ canvas {
 .detail-image-wrapper {
   position: relative;
   width: 100%;
-  max-width: 550px;
   margin-bottom: 1.5em;
 }
 
 .detail-image {
   width: 100%;
   border-radius: 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  /* Schatten wird dynamisch per JS gesetzt (mauspositionsabhängig) */
   display: block;
 }
 
@@ -387,14 +386,15 @@ canvas {
   letter-spacing: -0.015em;
   color: rgb(0, 0, 0);
   text-align: left;
-  margin: 2;
+  margin: 0;
   width: 100%;
-  max-width: 550px;
 }
 
 @media (max-width: 600px) {
   .detail-content {
     padding: 2em 1.5em 10em;
+    max-width: 90vw;
+    min-width: unset;
   }
 
   .detail-title {
