@@ -7,7 +7,6 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
   const ann = annotationData[annotationIndex]
   const [imageHovered, setImageHovered] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 })
-  if (!ann) return null
 
   // Mausposition für dynamischen Schatten tracken
   useEffect(() => {
@@ -20,6 +19,8 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
+
+  if (!ann) return null
 
   // Schatten fällt entgegengesetzt zur Mausposition (Maus = Lichtquelle)
   const shadowX = (mousePos.x - 0.5) * -15
