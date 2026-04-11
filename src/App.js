@@ -9,8 +9,8 @@ extend(geometry)
 // Annotation-Daten mit Zusatzinfos und Bildern
 export const annotationData = [
   {
-    name: 'Handels-\nwege',
-    detailName: 'Handelswege',
+    name: 'Handelswege',
+    detailName: 'Handels-\nwege',
     position: [1.75, 2.5, 2],
     info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist.',
     detailText:
