@@ -267,9 +267,9 @@ canvas {
   overflow-y: auto;
   overflow-x: hidden;
   pointer-events: auto;
-  /* Fade am unteren Rand */
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 67%, transparent 82%);
-  mask-image: linear-gradient(to bottom, black 0%, black 67%, transparent 82%);
+  /* Fade am unteren Rand — spät einsetzen, damit Text lesbar bleibt */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 95%);
+  mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 95%);
 }
 
 /* Detail-Seite Exit: alles gleitet nach oben und fadet aus */
@@ -335,8 +335,8 @@ canvas {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Gleicher Abstand oben wie der Zurück-Button */
-  padding: 2em 2em 12em;
+  /* Gleicher Abstand oben wie der Zurück-Button, unten viel Platz wegen Fade */
+  padding: 2em 2em 22em;
   /* Skaliert linear von ~33% (16:9) bis ~90% (9:16) */
   max-width: min(90vw, max(33vw, 55vh));
   margin: 0 auto;
@@ -346,7 +346,7 @@ canvas {
 .detail-image-wrapper {
   position: relative;
   width: 100%;
-  margin-bottom: 3em;
+  margin-bottom: 4.5em;
 }
 
 .detail-image {
@@ -398,7 +398,7 @@ canvas {
 
 @media (max-width: 600px) {
   .detail-content {
-    padding: 2em 1.5em 10em;
+    padding: 2em 1.5em 20em;
   }
 
   .detail-title {
