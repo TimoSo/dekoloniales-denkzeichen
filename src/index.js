@@ -22,6 +22,16 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
 
   if (!ann) return null
 
+  // Zitate zwischen „ und " kursiv hervorheben
+  const renderTextWithQuotes = (text) => {
+    const parts = text.split(/(„[^"]*")/g)
+    return parts.map((part, i) =>
+      part.startsWith('„') && part.endsWith('"')
+        ? <em key={i}>{part}</em>
+        : part
+    )
+  }
+
   // Schatten fällt entgegengesetzt zur Mausposition (Maus = Lichtquelle)
   const shadowX = (mousePos.x - 0.5) * -15
   const shadowY = (mousePos.y - 0.5) * -15
@@ -48,7 +58,7 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
             onMouseLeave={() => setImageHovered(false)}
           />
         </div>
-        <p className="detail-text detail-enter-text">{ann.detailText}</p>
+        <p className="detail-text detail-enter-text">{renderTextWithQuotes(ann.detailText)}</p>
       </div>
     </div>
   )
@@ -103,7 +113,7 @@ function MainApp() {
 
       <Suspense fallback={
         <div className="loader-screen">
-          <div className="loader">DEKOLONIALES DENKZEICHEN</div>
+          <div className="loader">Lade Baobab...</div>
         </div>
       }>
         <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} onBack={handleBack} />
