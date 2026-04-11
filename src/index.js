@@ -42,6 +42,7 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
             src={ann.image}
             alt={ann.name}
             className="detail-image"
+            loading="lazy"
             style={imageShadowStyle}
             onMouseEnter={() => setImageHovered(true)}
             onMouseLeave={() => setImageHovered(false)}
@@ -100,7 +101,11 @@ function MainApp() {
       {/* Hintergrund-Gradient-Overlay für Detail-Seite */}
       <div className={`bg-overlay ${page === 'detail' || detailExiting ? 'bg-overlay-active' : ''}`} />
 
-      <Suspense fallback={null}>
+      <Suspense fallback={
+        <div className="loader-screen">
+          <div className="loader">DEKOLONIALES DENKZEICHEN</div>
+        </div>
+      }>
         <App page={page} onTreeHover={setTreeHovered} onReadMore={handleReadMore} onBack={handleBack} />
       </Suspense>
 
