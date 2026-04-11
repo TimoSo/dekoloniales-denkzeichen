@@ -9,27 +9,20 @@ extend(geometry)
 // Annotation-Daten mit Zusatzinfos und Bildern
 export const annotationData = [
   {
-    name: 'Handelswege',
+    name: 'Handels-\nwege',
+    detailName: 'Handelswege',
     position: [1.75, 2.5, 2],
     info: 'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist.',
     detailText:
-      'Der Baum steht auf einer Transportkiste, die auf den Kolonialwarenhandel und dessen Transportwege verweist. Sie steht symbolisch für die globalen Handelsstrukturen, durch die Orte wie der Dortmunder Hafen in koloniale Ausbeutungsverhältnisse eingebunden waren. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden. In unmittelbarer Nähe befindet sich zudem ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird. Die Kiste verweist auf die materiellen Grundlagen des Kolonialismus — auf Güter, die unter Zwang produziert und über transkontinentale Routen verschifft wurden. Dortmund war als Industriestandort Teil dieser globalen Lieferketten, die Rohstoffe aus den kolonisierten Gebieten verarbeiteten und damit direkt von kolonialer Ausbeutung profitierten.',
+      'Die Transportkiste am Fuß des Baobabs verweist auf den Kolonialwarenhandel und die Handelswege, die Dortmund mit der kolonialen Ausbeutung verbanden. Dortmund war als Industriestandort Teil eines globalen Netzwerks, das Rohstoffe aus kolonisierten Gebieten verarbeitete und davon profitierte.\n\nFidel Amoussou-Moderan, Doktorand in Geschichte, hat im Auftrag der GrünBau gGmbH die Verbindungen zwischen Dortmund und dem Kolonialismus erforscht. Seine Arbeit zeigt, wie tief die kolonialen Handelsstrukturen in die lokale Wirtschaftsgeschichte eingeschrieben sind — von Importfirmen über Verarbeitungsbetriebe bis hin zu den Konsumgewohnheiten der Bevölkerung.\n\nDie Kiste steht symbolisch für die materiellen Grundlagen des Kolonialismus: Güter wie Kaffee, Kakao, Palmöl, Kautschuk und Baumwolle, die unter Zwang produziert und über transkontinentale Routen verschifft wurden. Diese Handelsstrukturen waren untrennbar mit Gewalt, Enteignung und systematischer Ausbeutung verbunden.\n\nIn unmittelbarer Nähe des Denkzeichens befindet sich ein ehemaliges Gebäude des Kolonialwarenhandels, das heute von der GrünBau gGmbH genutzt wird — ein Ort, an dem koloniale Vergangenheit und gegenwärtige Erinnerungsarbeit direkt aufeinandertreffen.',
     image: '/Baobab_Aufbau_1.jpg',
-  },
-  {
-    name: 'Krone',
-    position: [3.2, 8.8, 0],
-    info: 'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur.',
-    detailText:
-      'Die Baumkrone steht für Wachstum, Widerstand und die Verbindung zur Natur. In vielen westafrikanischen Kulturen ist der Baobab ein Versammlungsort — unter seiner Krone werden Geschichten erzählt, Konflikte gelöst und Wissen weitergegeben. Die ausladende Krone des Denkzeichens greift diese Tradition auf und schafft einen symbolischen Raum des Austauschs und der Begegnung. Sie erinnert daran, dass Widerstand gegen koloniale Strukturen immer auch ein Akt der Gemeinschaft war und ist. Die Krone wächst nach oben, dem Licht entgegen — ein Zeichen dafür, dass aus der Auseinandersetzung mit der Vergangenheit Neues entstehen kann.',
-    image: '/Baobab_Aufbau_2.jpg',
   },
   {
     name: 'Baobab',
     position: [-0.9, 5.8, 1],
     info: 'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch.',
     detailText:
-      'Der Baobab ist Erinnerung, Lebenskraft, Widerstand und Austausch. Das Kunstwerk soll eine dekoloniale Praxis verfolgen und den Raum für die Schwarze Community und weitere BIPoC öffnen. Der Baobab-Baum kann über tausend Jahre alt werden und speichert in seinem Stamm enorme Mengen Wasser — er ist ein Überlebenskünstler, der selbst in den trockensten Regionen gedeiht. Diese Widerstandsfähigkeit macht ihn zum Symbol für die Stärke und das kulturelle Gedächtnis der afrikanischen Diaspora. In Dortmund steht er als Zeichen dafür, dass die Geschichten und Perspektiven, die durch den Kolonialismus unterdrückt wurden, nicht verschwunden sind — sie leben weiter und fordern ihren Platz im öffentlichen Raum ein.',
+      'Der Baobab — auch Affenbrotbaum genannt — ist ein kulturelles Symbol von enormer Bedeutung. In vielen westafrikanischen Traditionen gilt er als „Wortbaum": ein Ort, an dem Geschichten bewahrt, Konflikte gelöst und Wissen von Generation zu Generation weitergegeben werden. Unter seinem Blätterdach versammelten sich die Griots — die Hüter*innen der mündlichen Überlieferung.\n\nDer Baobab kann über tausend Jahre alt werden und speichert in seinem Stamm enorme Mengen Wasser. Diese Widerstandsfähigkeit macht ihn zum Symbol für Stärke, Ausdauer und das kulturelle Gedächtnis der afrikanischen Diaspora.\n\nAuf der Karibikinsel St. Croix steht ein Baobab, der von versklavten Menschen aus Westafrika dorthin gebracht wurde. Als Zeichen der Erinnerung an ihre Heimat und ihre Identität überlebte er Jahrhunderte der Unterdrückung — ein lebendiges Denkmal des Widerstands.\n\nDie Frucht des Baobab ist reich an Vitamin C, Kalzium und Antioxidantien. Aus den Fasern werden Seile und Textilien hergestellt, die Blätter dienen als Nahrung und Medizin. Der Baum ist Lebensgrundlage und kulturelles Erbe zugleich.\n\nEin afrikanisches Sprichwort sagt: „Weisheit ist wie ein Baobab-Baum — niemand kann sie alleine umfassen." Das dekoloniale Denkzeichen greift diese Weisheit auf: Es lädt dazu ein, gemeinsam hinzusehen, zuzuhören und zu verstehen.',
     image: '/Baobab_Aufbau_3.jpg',
   },
   {
@@ -37,15 +30,16 @@ export const annotationData = [
     position: [-1.75, 2.5, -2],
     info: 'Der Dortmunder Hafen steht in unmittelbarer Verbindung mit der Kolonialgeschichte.',
     detailText:
-      'Vielleicht hast du schon gehört, dass der Dortmunder Hafen unmittelbar mit der Kolonialgeschichte in Verbindung steht. Hierher wurden Rohstoffe aus den annexierten Gebieten des afrikanischen Kontinents für den städtischen Verkauf oder zur industriellen Weiterverarbeitung verladen. Der Hafen war ein Knotenpunkt im Netzwerk kolonialer Warenströme — Kaffee, Kakao, Palmöl und andere Güter, die unter ausbeuterischen Bedingungen produziert wurden, fanden hier ihren Weg in die deutsche Wirtschaft. Diese Geschichte ist in der städtischen Erinnerung kaum präsent, obwohl sie die Grundlage für den industriellen Wohlstand der Region mitgelegt hat. Das Denkzeichen macht diese unsichtbaren Verbindungen sichtbar und lädt dazu ein, den Hafen als einen Ort mit kolonialer Vergangenheit neu zu betrachten.',
+      'Triggerwarnung: Dieser Text behandelt koloniale Gewalt, einschließlich Versklavung, Völkermord und systematischer Unterdrückung. Er kann belastend sein.\n\nDer Dortmunder Hafen, eröffnet 1899, war von Beginn an in koloniale Handelsstrukturen eingebunden. Über den Dortmund-Ems-Kanal wurden Rohstoffe aus den kolonisierten Gebieten — darunter Kaffee, Kakao, Palmöl und Kautschuk — nach Dortmund transportiert und hier industriell weiterverarbeitet. Der Hafen war ein Knotenpunkt im Netzwerk kolonialer Warenströme.\n\nDiese Geschichte ist untrennbar mit der deutschen Kolonialherrschaft verbunden: In „Deutsch-Südwestafrika" (dem heutigen Namibia) verübte das Deutsche Reich zwischen 1904 und 1908 einen Völkermord an den Herero und Nama. Zehntausende Menschen wurden ermordet, in Konzentrationslager gesperrt oder in die Wüste getrieben. Dieser Genozid — der erste des 20. Jahrhunderts — wurde lange verdrängt und erst 2021 von der Bundesregierung offiziell anerkannt.\n\nAuch in anderen kolonisierten Gebieten — in Ostafrika, Kamerun, Togo und im Pazifik — ging die deutsche Herrschaft mit Zwangsarbeit, Landraub und kultureller Zerstörung einher. Die wirtschaftlichen Profite dieser Ausbeutung flossen direkt in die deutsche Industrie und damit auch nach Dortmund.\n\nDas Denkzeichen macht diese unsichtbaren Verbindungen sichtbar und lädt dazu ein, den Hafen als einen Ort mit kolonialer Vergangenheit neu zu betrachten.',
     image: '/Baobab_Aufbau_4.jpg',
   },
   {
-    name: 'Lichter',
+    name: 'Dekolonial',
+    detailName: 'Dekoloniale Praxis',
     position: [-2.5, 8.3, 0],
-    info: 'Die Lichter stehen für Erinnerung und Hoffnung.',
+    info: 'Was bedeutet dekoloniale Praxis? Ein Ansatz zur Auseinandersetzung mit kolonialen Kontinuitäten.',
     detailText:
-      'Die Lichter stehen für Erinnerung und Hoffnung. Sie sind ein zentrales gestalterisches Element des Denkzeichens und verweisen auf die Menschen, deren Geschichten durch den Kolonialismus ausgelöscht oder unsichtbar gemacht wurden. Jedes Licht steht für eine Stimme, eine Erfahrung, eine Perspektive, die gehört werden will. In der Dunkelheit leuchten sie als Zeichen der Hoffnung — dafür, dass Erinnerung nicht Stillstand bedeutet, sondern der Ausgangspunkt für Veränderung sein kann. Die Lichter schaffen eine Atmosphäre der Andacht und laden Besuchende dazu ein, innezuhalten und sich mit den Geschichten auseinanderzusetzen, die dieser Ort in sich trägt.',
+      'Dekoloniale Praxis bedeutet, koloniale Denkmuster, Strukturen und Machtverhältnisse zu erkennen, zu hinterfragen und aktiv zu verändern. Es geht nicht nur um die Aufarbeitung historischer Ereignisse, sondern um die Auseinandersetzung mit den Kontinuitäten des Kolonialismus in der Gegenwart.\n\nDie Dekoloniale Rechtswissenschaft untersucht, wie koloniale Strukturen in heutigen Rechtssystemen fortwirken. Sie zeigt auf, dass viele der Normen und Institutionen, die wir als universell betrachten, in kolonialen Kontexten entstanden sind und bis heute Machtverhältnisse reproduzieren.\n\n„Dekolonisierung ist kein Ereignis, sondern ein fortlaufender Prozess. Sie erfordert, dass wir die Strukturen, die koloniale Macht reproduzieren, nicht nur erkennen, sondern aktiv verändern."\n— Nikita Dhawan, Politikwissenschaftlerin\n\n„Das Recht war eines der mächtigsten Werkzeuge des Kolonialismus. Es wurde benutzt, um Landraub zu legitimieren, Menschen zu entrechten und kulturelle Praktiken zu kriminalisieren. Eine dekoloniale Rechtspraxis muss diese Geschichte anerkennen und alternative Formen der Gerechtigkeit entwickeln."\n— Sundhya Pahuja, Rechtswissenschaftlerin\n\nDas dekoloniale Denkzeichen versteht sich als Teil dieser Praxis: Es schafft einen Raum, in dem verdrängte Geschichten sichtbar werden, in dem Fragen gestellt werden dürfen und in dem neue Perspektiven entstehen können.',
     image: '/Baobab_Aufbau_6.jpg',
   },
   {

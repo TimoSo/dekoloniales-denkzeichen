@@ -37,7 +37,7 @@ function DetailPage({ annotationIndex, onBack, leaving }) {
       </div>
       <div className="detail-content">
         <div className="detail-image-wrapper detail-enter-image">
-          <h2 className={`detail-title detail-enter-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.name}</h2>
+          <h2 className={`detail-title detail-enter-title ${imageHovered ? 'detail-title-outline' : ''}`}>{ann.detailName || ann.name}</h2>
           <img
             src={ann.image}
             alt={ann.name}
