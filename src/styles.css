@@ -359,7 +359,7 @@ canvas {
 /* Titel: Unterkante immer auf gleicher Höhe, mehrzeilige Titel wachsen nach oben */
 .detail-title {
   position: absolute;
-  bottom: -1.2em;
+  bottom: -0.2em;
   left: -1em;
   font-family: 'Thumpa', sans-serif;
   font-weight: 100;
@@ -494,8 +494,13 @@ canvas {
 }
 
 @keyframes loader-pulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 600px) {
