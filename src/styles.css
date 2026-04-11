@@ -267,9 +267,9 @@ canvas {
   overflow-y: auto;
   overflow-x: hidden;
   pointer-events: auto;
-  /* Fade am unteren Rand — spät einsetzen, damit Text lesbar bleibt */
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 95%);
-  mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 95%);
+  /* Fade am unteren Rand */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 85%);
+  mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 85%);
 }
 
 /* Detail-Seite Exit: alles gleitet nach oben und fadet aus */
@@ -346,7 +346,7 @@ canvas {
 .detail-image-wrapper {
   position: relative;
   width: 100%;
-  margin-bottom: 4.5em;
+  margin-bottom: 3em;
 }
 
 .detail-image {
@@ -356,12 +356,11 @@ canvas {
   display: block;
 }
 
-/* Titel: vertikal zentriert über dem Bild, etwas nach links rausragend */
+/* Titel: Unterkante immer auf gleicher Höhe, mehrzeilige Titel wachsen nach oben */
 .detail-title {
   position: absolute;
-  top: 100%;
+  bottom: -1.2em;
   left: -1em;
-  transform: translateY(-50%);
   font-family: 'Thumpa', sans-serif;
   font-weight: 100;
   font-size: 5em;
