@@ -369,6 +369,7 @@ canvas {
   margin: 0;
   text-align: left;
   text-transform: uppercase;
+  white-space: pre-line;
   z-index: 2;
   pointer-events: none;
   transition: color 0.4s ease, -webkit-text-stroke 0.4s ease;
@@ -487,9 +488,10 @@ canvas {
   font-family: 'Thumpa', sans-serif;
   font-weight: 100;
   font-size: 3vw;
-  color: rgb(0, 105, 76);
+  color: rgb(198, 83, 12);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  text-align: center;
   animation: loader-pulse 2s ease-in-out infinite;
 }
 
